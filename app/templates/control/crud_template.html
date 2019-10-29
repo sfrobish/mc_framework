@@ -305,6 +305,7 @@ $(function(){
         		} else {
             		// data.form contains the HTML for the replacement form
             		$("#editControlform").replaceWith(data.form);
+					location.reload();
         		}
 			}
 		});
@@ -328,6 +329,7 @@ $(function(){
         		} else {
             		// data.form contains the HTML for the replacement form
             		$("#deleteControlForm").replaceWith(data.form);
+					location.reload();
         		}
 			}
 		});
@@ -433,11 +435,11 @@ $(function(){
 						<input type="hidden" id="controlid">
 						<div class="form-group">
 							<label>Name</label>
-							<input type="text" class="form-control" name="name" required>
+							<input type="text" class="form-control" name="name" id="editName" required>
 						</div>
 						<div class="form-group">
 							<label>Description</label>
-							<input type="text" class="form-control" name="description" required>
+							<input type="text" class="form-control" name="description" id="editDescription" required>
 						</div>			
 					</div>
 					<div class="modal-footer">

@@ -13,7 +13,7 @@ class DevelopmentConfig(Config):
   DEBUG = True
   SQLALCHEMY_ECHO = True
 
-  DB_URL = 'postgresql+psycopg2://postgres:postgres@localhost:5432/mc_demo'
+  DB_URL = 'postgresql+psycopg2://postgres:postgres@mcdemo.cwcwrjspakrp.us-east-1.rds.amazonaws.com:5432/postgres'
   SQLALCHEMY_DATABASE_URI = DB_URL 
 
   SECRET_KEY = os.urandom(32)
