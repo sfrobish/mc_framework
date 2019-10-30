@@ -13,6 +13,8 @@
     {{ form.hidden_tag() }}
     {{ form_field(form.name) }}
     {{ form_field(form.description) }}
+    {{ form_field(form.parent_id) }}
+    {{ form_field(form.score) }}
   </div>
   <div class="modal-footer">
     {% block footer %}
