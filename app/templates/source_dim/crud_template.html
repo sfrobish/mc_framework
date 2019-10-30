@@ -262,7 +262,11 @@ $(document).on("click", ".edit", function () {
      var mySource_DimName = $(this).data('name');
      $(".modal-body #name").val( mySource_DimName );
 	 var mySource_DimDesc = $(this).data('description');
-     $(".modal-body #description").val( mySource_DimDesc );
+	 $(".modal-body #description").val( mySource_DimDesc );
+	 var mySource_DimParent = $(this).data('parent_id');
+	 $(".modal-body #parent_id").val( mySource_DimParent );
+	 var mySource_DimScore = $(this).data('score');
+     $(".modal-body #score").val( mySource_DimScore );
 });
 $(document).on("click", ".delete", function () {
 	 var mySource_DimId = $(this).data('id');
@@ -347,8 +351,8 @@ $(function(){
 						<h2>Manage <b>Source Dimensions</b></h2>
 					</div>
 					<div class="col-sm-6">
-						<a href="#addSource_DimModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add Source Dimension</span></a>
-						<a href="#deleteSource_DimModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete Source Dimension</span></a>						
+						<a href="#addSource_DimModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add</span></a>
+						<a href="#deleteSource_DimModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>						
 					</div>
                 </div>
             </div>
