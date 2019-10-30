@@ -363,6 +363,8 @@ $(function(){
 						</th>
                         <th>Source_Dim Name</th>
 						<th>Description</th>
+						<th>Parent Id</th>
+						<th>Score</th>
 						<th>Actions</th>
                     </tr>
                 </thead>
@@ -377,7 +379,9 @@ $(function(){
 							</td>
                   			<td> {{ source_dim.source_name }} </td>
                   			<td> {{ source_dim.source_descr }} </td>
-                  			<td>
+							<td> {{ source_dim.parent_source_id }} </td>  
+							<td> {{ source_dim.similarity_score }} </td>
+							<td>
 								<a href="#editSource_DimModal" class="edit" data-toggle="modal" data-id="{{ source_dim.source_id }}" data-name="{{ source_dim.source_name }}" data-description="{{ source_dim.source_descr }}">
 									<i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
 								</a>
