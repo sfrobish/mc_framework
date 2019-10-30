@@ -58,6 +58,21 @@ class control_recipe(basemodel):
     self.control_id = kwargs.get("control_id")
 
 
+class source_dim(basemodel):
+  __tablename__ = "source_dim"
+  source_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
+  source_name = db.Column(db.String(60), unique=True, nullable=False)
+  source_descr = db.Column(db.String(200), unique=False, nullable=False)
+  parent_source_id = db.Column(db.Integer, unique=True, nullable=False)
+  similarity_score = db.Column(db.Integer, unique=False, nullable=False)
+
+  def __init__(self, **kwargs):
+    self.source_descr = kwargs.get("source_descr")
+    self.source_name = kwargs.get("source_name")
+    self.parent_source_id = kwargs.get("parent_source_id")
+    self.similarity_score = kwargs.get("similarity_score")
+
+
 class classification(basemodel):
   __tablename__ = "classification"
   classification_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
