@@ -217,12 +217,12 @@
     .modal .modal-title {
         display: inline-block;
     }
-	.modal .form-source_dim {
+	.modal .form-control {
 		border-radius: 2px;
 		box-shadow: none;
 		border-color: #dddddd;
 	}
-	.modal textarea.form-source_dim {
+	.modal textarea.form-control {
 		resize: vertical;
 	}
 	.modal .btn {
@@ -412,19 +412,19 @@ $(function(){
 					<div class="modal-body">					
 						<div class="form-group">
 							<label>Name</label>
-							<input type="text" name="name" class="form-source_dim" required>
+							<input type="text" name="name" class="form-control" required>
 						</div>
 						<div class="form-group">
 							<label>Description</label>
-							<input type="text" name="description" class="form-source_dim" required>
+							<input type="text" name="description" class="form-control" required>
 						</div>		
 						<div class="form-group">
 							<label>Parent Id</label>
-							<input type="number" name="parent_id" class="form-source_dim" required>
+							<input type="number" name="parent_id" class="form-control" required>
 						</div>	
 						<div class="form-group">
 							<label>Score</label>
-							<input type="number" name="score" class="form-source_dim" required>
+							<input type="number" name="score" class="form-control" required>
 						</div>			
 					</div>
 					<div class="modal-footer">
@@ -448,19 +448,19 @@ $(function(){
 						<input type="hidden" id="source_dimid">
 						<div class="form-group">
 							<label>Name</label>
-							<input type="text" class="form-source_dim" name="name" id="name" required>
+							<input type="text" class="form-control" name="name" id="name" required>
 						</div>
 						<div class="form-group">
 							<label>Description</label>
-							<input type="text" class="form-source_dim" name="description" id="description" required>
+							<input type="text" class="form-control" name="description" id="description" required>
 						</div>
 						<div class="form-group">
 							<label>Parent Id</label>
-							<input type="number" class="form-source_dim" name="parent_id" id="parent_id" required>
+							<input type="number" class="form-control" name="parent_id" id="parent_id" required>
 						</div>
 						<div class="form-group">
 							<label>Score</label>
-							<input type="number" class="form-source_dim" name="score" id="score" required>
+							<input type="number" class="form-control" name="score" id="score" required>
 						</div>			
 					</div>
 					<div class="modal-footer">
@@ -486,19 +486,19 @@ $(function(){
 							<input type="hidden" readonly id="source_dimid">
 							<label for="source_dimname" class="col-sm-2 col-form-label">Name</label>
 							<div class="col-sm-10 ml-1">
-								<input type="text" readonly class="form-source_dim-plaintext" id="source_dimname">
+								<input type="text" readonly class="form-control-plaintext" id="source_dimname">
 							</div>
 							<label for="source_dimdescripition" class="col-sm-2 col-form-label">Description</label>
 							<div class="col-sm-10 ml-1">
-								<input type="text" readonly class="form-source_dim-plaintext" id="source_dimdescripition">
+								<input type="text" readonly class="form-control-plaintext" id="source_dimdescripition">
 							</div>
 							<label for="source_dimparent_id" class="col-sm-2 col-form-label">Parent Id</label>
 							<div class="col-sm-10 ml-1">
-								<input type="text" readonly class="form-source_dim-plaintext" id="source_dimparent_id">
+								<input type="text" readonly class="form-control-plaintext" id="source_dimparent_id">
 							</div>
 							<label for="source_dimscore" class="col-sm-2 col-form-label">Score</label>
 							<div class="col-sm-10 ml-1">
-								<input type="text" readonly class="form-source_dim-plaintext" id="source_dimscore">
+								<input type="text" readonly class="form-control-plaintext" id="source_dimscore">
 							</div>
 						</div>
 						<p class="text-warning"><small>This action cannot be undone.</small></p>
