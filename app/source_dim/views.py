@@ -71,6 +71,8 @@ def edit_source_dim(id):
   #if form.validate_on_submit():
   cntldata.source_name = form.name.data
   cntldata.source_descr = form.description.data
+  cntldata.parent_source_id = form.parent_id.data
+  cntldata.similarity_score = form.score.data
   db.session.commit()
   flash('You have successfully edited the source.')
 
