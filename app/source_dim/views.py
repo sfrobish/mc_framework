@@ -44,7 +44,9 @@ def add_source_dim():
   if form.validate_on_submit():
     print("VALID") """
   cntldata = source_dimdbo(source_name=form.name.data,
-                        source_descr=form.description.data)
+                        source_descr=form.description.data,
+                        parent_source_id=form.parent_id.data,
+                        similarity_score=form.score.data)
   try:
     # add source_dim to the database
     db.session.add(cntldata)
