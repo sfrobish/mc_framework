@@ -21,7 +21,7 @@ def list_usage():
   pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
 
-  return render_template('usage/usage_template.html',
+  return render_template('usage/crud_template.html',
                            usage=pagination_usage,
                            pagination=pagination,
                            page=page,
@@ -44,7 +44,7 @@ def add_usage():
   if form.validate_on_submit():
     print("VALID") """
   cntldata = usagedbo(usage_name=form.name.data,
-                        usage_description=form.description.data)
+                        usage_descr=form.description.data)
   try:
     # add usage to the database
     db.session.add(cntldata)
@@ -68,7 +68,7 @@ def edit_usage(id):
   form = UsageForm(obj=cntldata)
   #if form.validate_on_submit():
   cntldata.usage_name = form.name.data
-  cntldata.usage_description = form.description.data
+  cntldata.usage_descr = form.description.data
   cntldata.usage_parent = form.parent.data
   cntldata.parent_usage_id = form.parent_usage_id.data
   cntldata.usage_similarity_score = form.usage_similarity_score
@@ -78,11 +78,11 @@ def edit_usage(id):
   # redirect to the departments page
   return redirect(url_for('usage.list_usage'))
 
-  #form.description.data = cntldata.control_description
-  #form.name.data = cntldata.control_name
-  #return render_template('control/control.html', action="Edit",
-  #                        add_control=add_control, form=form,
-  #                        control=cntldata, title="Edit Control")
+  form.description.data = cntldata.usage_descr
+  form.name.data = cntldata.usage_name
+  return render_template('usage/usage.html', action="Edit",
+                           add_usage=add_usage, form=form,
+                           usage=cntldata, title="Edit Source")
 
 
 @usage.route('/usage/delete/<int:id>', methods=['GET', 'POST'])

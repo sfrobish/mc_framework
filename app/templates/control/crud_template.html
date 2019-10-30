@@ -258,7 +258,7 @@ $(document).ready(function(){
 	});
 $(document).on("click", ".edit", function () {
 	 var myControlId = $(this).data('id');
-	 $(".modal-body #controlid").val( myControlId );
+	 $(".modal-body #usageid").val( myControlId );
      var myControlName = $(this).data('name');
      $(".modal-body #name").val( myControlName );
 	 var myControlDesc = $(this).data('description');
@@ -266,7 +266,7 @@ $(document).on("click", ".edit", function () {
 });
 $(document).on("click", ".delete", function () {
 	 var myControlId = $(this).data('id');
-	 $(".modal-body #controlid").val( myControlId );
+	 $(".modal-body #usageid").val( myControlId );
      var myControlName = $(this).data('name');
      $(".modal-body #name").val( myControlName );
 	 var myControlDesc = $(this).data('description');
@@ -376,14 +376,14 @@ $(function(){
 								</span>
 							</td>
                   			<td> {{ control.control_name }} </td>
-                  			<td> {{ control.control_description }} </td>
+                  			<td> {{ control.control_descr }} </td>
                   			<td>
-								<a href="#editControlModal" class="edit" data-toggle="modal" data-id="{{ control.control_id }}" data-name="{{ control.control_name }}" data-description="{{ control.control_description }}">
+								<a href="#editControlModal" class="edit" data-toggle="modal" data-id="{{ control.control_id }}" data-name="{{ control.control_name }}" data-description="{{ usage.usage_descr }}">
 									<i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
 								</a>
                   			</td>
                   			<td>
-								<a href="#deleteControlModalOne" class="delete" data-toggle="modal" data-id="{{ control.control_id }}"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+								<a href="#deleteControlModalOne" class="delete" data-toggle="modal" data-id="{{ usage.control_id }}"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
                   			</td>
                 		</tr>
               		{% endfor %}
