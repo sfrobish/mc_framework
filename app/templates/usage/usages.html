@@ -18,6 +18,8 @@
                 <tr>
                   <th width="15%"> Name </th>
                   <th width="40%"> Description </th>
+                  <th width="12%"> Parent Id </th>
+                  <th width="12%"> Score </th>
                   <th width="15%"> Edit </th>
                   <th width="15%"> Delete </th>
                 </tr>
@@ -27,8 +29,10 @@
                 <tr>
                   <td> {{ usage.usage_name }} </td>
                   <td> {{ usage.usage_descr }} </td>
+                  <td> {{ usage.parent_source_id}} </td>
+                  <td> {{ usage.similarity_score}} </td>
                   <td>
-                    <a href="{{ url_for('usage.edit_control', id=usage.usage_id) }}">
+                    <a href="{{ url_for('usage.edit_usage', id=usage.usage_id) }}">
                       <i class="fa fa-pencil"></i> Edit
                     </a>
                   </td>
