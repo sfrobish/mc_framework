@@ -344,10 +344,10 @@ $(function(){
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-6">
-						<h2>Manage <b>Source_Dims</b></h2>
+						<h2>Manage <b>Source Dimensions</b></h2>
 					</div>
 					<div class="col-sm-6">
-						<a href="#addSource_DimModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Source_Dim</span></a>
+						<a href="#addSource_DimModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Source Dimension</span></a>
 						<a href="#deleteSource_DimModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>						
 					</div>
                 </div>
@@ -361,7 +361,7 @@ $(function(){
 								<label for="selectAll"></label>
 							</span>
 						</th>
-                        <th>Source_Dim Name</th>
+                        <th>Name</th>
 						<th>Description</th>
 						<th>Parent Id</th>
 						<th>Score</th>
@@ -405,7 +405,7 @@ $(function(){
 			<div class="modal-content">
 				<form id="addSource_DimForm">
 					<div class="modal-header">						
-						<h4 class="modal-title">Add Source_Dim</h4>
+						<h4 class="modal-title">Add Source Dimension</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
 					<div class="modal-body">					
@@ -440,7 +440,7 @@ $(function(){
 			<div class="modal-content">
 				<form id="editSource_DimForm">
 					<div class="modal-header">						
-						<h4 class="modal-title">Edit Source_Dim</h4>
+						<h4 class="modal-title">Edit Source Dimension</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
 					<div class="modal-body">					
@@ -476,7 +476,7 @@ $(function(){
 			<div class="modal-content">
 				<form id="deleteSource_DimForm">
 					<div class="modal-header">						
-						<h4 class="modal-title">Delete Source_Dim</h4>
+						<h4 class="modal-title">Delete Source Dimension</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
 					<div class="modal-body">					
@@ -491,14 +491,14 @@ $(function(){
 							<div class="col-sm-10 ml-1">
 								<input type="text" readonly class="form-source_dim-plaintext" id="source_dimdescripition">
 							</div>
-							<!-- <label for="source_dimparent_id" class="col-sm-2 col-form-label">Parent Id</label>
+							<label for="source_dimparent_id" class="col-sm-2 col-form-label">Parent Id</label>
 							<div class="col-sm-10 ml-1">
 								<input type="text" readonly class="form-source_dim-plaintext" id="source_dimparent_id">
 							</div>
 							<label for="source_dimscore" class="col-sm-2 col-form-label">Score</label>
 							<div class="col-sm-10 ml-1">
 								<input type="text" readonly class="form-source_dim-plaintext" id="source_dimscore">
-							</div> -->
+							</div>
 						</div>
 						<p class="text-warning"><small>This action cannot be undone.</small></p>
 					</div>
