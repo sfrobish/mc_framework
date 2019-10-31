@@ -41,5 +41,8 @@ def create_app(config_name):
   from .control_recipe import control_recipe as control_recipe_blueprint
   app.register_blueprint(control_recipe_blueprint)
   
-  
+  from .source_dim import source_dim as source_dim_blueprint
+  csrf.exempt(source_dim_blueprint)
+  app.register_blueprint(source_dim_blueprint)
+
   return app

@@ -1,0 +1,64 @@
+{% import "bootstrap/utils.html" as utils %}
+{% extends "base.html" %}
+{% block title %}Source_Dims{% endblock %}
+{% block body %}
+<div class="content-section">
+  <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <br/>
+        {{ utils.flashed_messages() }}
+        <br/>
+        <h1 style="text-align:center;">Source_Dims</h1>
+        {% if source_dims %}
+          <hr class="intro-divider">
+          <div class="center">
+            <table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th width="12%"> Name </th>
+                  <th width="40%"> Description </th>
+                  <th width="12%"> Parent Id </th>
+                  <th width="12%"> Score </th>
+                  <th width="12%"> Edit </th>
+                  <th width="12%"> Delete </th>
+                </tr>
+              </thead>
+              <tbody>
+              {% for source_dim in source_dims %}
+                <tr>
+                  <td> {{ source_dim.source_name }} </td>
+                  <td> {{ source_dim.source_descr }} </td>
+                  <td> {{ source_dim.parent_source_id}} </td>
+                  <td> {{source_dim.similarity_score}} </td>
+                  <td>
+                    <a href="{{ url_for('source_dim.edit_source_dim', id=source_dim.source_id) }}">
+                      <i class="fa fa-pencil"></i> Edit
+                    </a>
+                  </td>
+                  <td>
+                    <a href="{{ url_for('source_dim.delete_source_dim', id=source_dim.source_id) }}">
+                      <i class="fa fa-trash"></i> Delete
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div style="text-align: center">
+        {% else %}
+          <div style="text-align: center">
+            <h3> No source_dims have been added. </h3>
+            <hr class="intro-divider">
+        {% endif %}
+          <a href="{{ url_for('source_dim.add_source_dim') }}" class="btn btn-default btn-lg">
+            <i class="fa fa-plus"></i>
+            Add Source_Dim
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
