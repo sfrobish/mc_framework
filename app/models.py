@@ -106,3 +106,19 @@ class classification(basemodel):
     self.rights_id = kwargs.get("rights_id")
     self.control_recipe_id = kwargs.get("control_recipe_id")
     self.classification_label = kwargs.get("classification_label")
+
+
+class domain_dim(basemodel):
+  __tablename__ = "domain_dim"
+  domain_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
+  domain_name = db.Column(db.String(60), unique=True, nullable=False)
+  domain_description = db.Column(db.String(200), unique=False, nullable=False)
+  parent_domain_id = db.Column(db.Integer, unique=False, nullable=False)
+  similarity_score = db.Column(db.Integer, unique=False, nullable=False)
+
+  def __init__(self, **kwargs):
+    self.domain_id = kwargs.get("domain_id")
+    self.domain_name = kwargs.get("domain_name")
+    self.domain_description = kwargs.get("domain_description")
+    self.parent_domain_id = kwargs.get("parent_domain_id")
+    self.similarity_score = kwargs.get("similarity_score")
