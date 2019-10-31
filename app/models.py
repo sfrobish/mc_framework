@@ -57,8 +57,9 @@ class control_recipe(basemodel):
     self.recipe_id = kwargs.get("recipe_id")
     self.control_id = kwargs.get("control_id")
 
+
 class usage(basemodel):
-  __tablename__ = "usage"
+  __tablename__ = "usage_dim"
   usage_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
   usage_name = db.Column(db.String(60), unique=True, nullable=False)
   usage_descr = db.Column(db.String(200), unique=False, nullable=False)
@@ -80,6 +81,37 @@ class source_dim(basemodel):
     self.source_descr = kwargs.get("source_descr")
     self.source_name = kwargs.get("source_name")
     self.parent_source_id = kwargs.get("parent_source_id")
+    self.similarity_score = kwargs.get("similarity_score")
+
+
+class geography_dim(basemodel):
+  __tablename__ = "geography_dim"
+  geo_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
+  geo_name = db.Column(db.String(60), unique=True, nullable=False)
+  geo_descr = db.Column(db.String(200), unique=False, nullable=False)
+  parent_geo_id = db.Column(db.Integer, unique=True, nullable=False)
+  similarity_score = db.Column(db.Integer, unique=False, nullable=False)
+
+  def __init__(self, **kwargs):
+    self.geo_name = kwargs.get("geo_name")
+    self.geo_descr = kwargs.get("geo_descr")
+    self.parent_geo_id = kwargs.get("parent_geo_id")
+    self.similarity_score = kwargs.get("similarity_score")
+
+
+class domain_dim(basemodel):
+  __tablename__ = "domain_dim"
+  domain_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
+  domain_name = db.Column(db.String(60), unique=True, nullable=False)
+  domain_description = db.Column(db.String(200), unique=False, nullable=False)
+  parent_domain_id = db.Column(db.Integer, unique=False, nullable=False)
+  similarity_score = db.Column(db.Integer, unique=False, nullable=False)
+
+  def __init__(self, **kwargs):
+    self.domain_id = kwargs.get("domain_id")
+    self.domain_name = kwargs.get("domain_name")
+    self.domain_description = kwargs.get("domain_description")
+    self.parent_domain_id = kwargs.get("parent_domain_id")
     self.similarity_score = kwargs.get("similarity_score")
 
 
@@ -106,19 +138,3 @@ class classification(basemodel):
     self.rights_id = kwargs.get("rights_id")
     self.control_recipe_id = kwargs.get("control_recipe_id")
     self.classification_label = kwargs.get("classification_label")
-
-
-class domain_dim(basemodel):
-  __tablename__ = "domain_dim"
-  domain_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
-  domain_name = db.Column(db.String(60), unique=True, nullable=False)
-  domain_description = db.Column(db.String(200), unique=False, nullable=False)
-  parent_domain_id = db.Column(db.Integer, unique=False, nullable=False)
-  similarity_score = db.Column(db.Integer, unique=False, nullable=False)
-
-  def __init__(self, **kwargs):
-    self.domain_id = kwargs.get("domain_id")
-    self.domain_name = kwargs.get("domain_name")
-    self.domain_description = kwargs.get("domain_description")
-    self.parent_domain_id = kwargs.get("parent_domain_id")
-    self.similarity_score = kwargs.get("similarity_score")

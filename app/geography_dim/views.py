@@ -6,7 +6,7 @@ import json
 from . import geography
 from .forms import GeographyForm
 from .. import db
-from ..models import geography as geographydbo
+from ..models import geography_dim as geographydbo
   
 
 @geography.route('/geography', methods=['GET', 'POST'])

@@ -35,25 +35,25 @@ def create_app(config_name):
   csrf.exempt(control_blueprint)
   app.register_blueprint(control_blueprint)
 
-  from .usage import usage as usage_blueprint
-  csrf.exempt(usage_blueprint)
-  app.register_blueprint(usage_blueprint)
-
   from .recipe import recipe as recipe_blueprint
   app.register_blueprint(recipe_blueprint)
   
   from .control_recipe import control_recipe as control_recipe_blueprint
   app.register_blueprint(control_recipe_blueprint)
   
-  from .domain_dim import domain_dim as domain_dim_blueprint
-  app.register_blueprint(domain_dim_blueprint)
+  from .domain_dim import domain_dim as domain_blueprint
+  app.register_blueprint(domain_blueprint)
   
-  from .geography import geography as geography_blueprint
+  from .geography_dim import geography as geography_blueprint
   app.register_blueprint(geography_blueprint)
 
-  from .source_dim import source_dim as source_dim_blueprint
-  csrf.exempt(source_dim_blueprint)
-  app.register_blueprint(source_dim_blueprint)
+  from .source_dim import source_dim as source_blueprint
+  csrf.exempt(source_blueprint)
+  app.register_blueprint(source_blueprint)
+
+  from .usage_dim import usage as usage_blueprint
+  csrf.exempt(usage_blueprint)
+  app.register_blueprint(usage_blueprint)
 
 
   return app

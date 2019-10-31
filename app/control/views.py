@@ -21,7 +21,7 @@ def list_controls():
   pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
 
-  return render_template('control/crud_template.html',
+  return render_template('control/control_template.html',
                            controls=pagination_controls,
                            pagination=pagination,
                            page=page,
