@@ -417,10 +417,10 @@ ALTER SEQUENCE mc_demo.source_dim_source_id_seq OWNED BY mc_demo.source_dim.sour
 
 --
 -- TOC entry 212 (class 1259 OID 16587)
--- Name: usage_dim; Type: TABLE; Schema: mc_demo; Owner: postgres
+-- Name: usage; Type: TABLE; Schema: mc_demo; Owner: postgres
 --
 
-CREATE TABLE mc_demo.usage_dim (
+CREATE TABLE mc_demo.usage (
     usage_id bigint NOT NULL,
     usage_name character varying(60) NOT NULL,
     usage_descr character varying(1000),
@@ -429,14 +429,14 @@ CREATE TABLE mc_demo.usage_dim (
 );
 
 
-ALTER TABLE mc_demo.usage_dim OWNER TO postgres;
+ALTER TABLE mc_demo.usage OWNER TO postgres;
 
 --
 -- TOC entry 211 (class 1259 OID 16585)
--- Name: usage_dim_usage_id_seq; Type: SEQUENCE; Schema: mc_demo; Owner: postgres
+-- Name: usage_usage_id_seq; Type: SEQUENCE; Schema: mc_demo; Owner: postgres
 --
 
-CREATE SEQUENCE mc_demo.usage_dim_usage_id_seq
+CREATE SEQUENCE mc_demo.usage_usage_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -444,15 +444,15 @@ CREATE SEQUENCE mc_demo.usage_dim_usage_id_seq
     CACHE 1;
 
 
-ALTER TABLE mc_demo.usage_dim_usage_id_seq OWNER TO postgres;
+ALTER TABLE mc_demo.usage_usage_id_seq OWNER TO postgres;
 
 --
 -- TOC entry 3039 (class 0 OID 0)
 -- Dependencies: 211
--- Name: usage_dim_usage_id_seq; Type: SEQUENCE OWNED BY; Schema: mc_demo; Owner: postgres
+-- Name: usage_usage_id_seq; Type: SEQUENCE OWNED BY; Schema: mc_demo; Owner: postgres
 --
 
-ALTER SEQUENCE mc_demo.usage_dim_usage_id_seq OWNED BY mc_demo.usage_dim.usage_id;
+ALTER SEQUENCE mc_demo.usage_usage_id_seq OWNED BY mc_demo.usage.usage_id;
 
 
 --
@@ -529,10 +529,10 @@ ALTER TABLE ONLY mc_demo.source_dim ALTER COLUMN source_id SET DEFAULT nextval('
 
 --
 -- TOC entry 2876 (class 2604 OID 16590)
--- Name: usage_dim usage_id; Type: DEFAULT; Schema: mc_demo; Owner: postgres
+-- Name: usage usage_id; Type: DEFAULT; Schema: mc_demo; Owner: postgres
 --
 
-ALTER TABLE ONLY mc_demo.usage_dim ALTER COLUMN usage_id SET DEFAULT nextval('mc_demo.usage_dim_usage_id_seq'::regclass);
+ALTER TABLE ONLY mc_demo.usage ALTER COLUMN usage_id SET DEFAULT nextval('mc_demo.usage_usage_id_seq'::regclass);
 
 
 --
@@ -636,11 +636,11 @@ ALTER TABLE ONLY mc_demo.source_dim
 
 --
 -- TOC entry 2897 (class 2606 OID 16595)
--- Name: usage_dim usage_dim_pkey; Type: CONSTRAINT; Schema: mc_demo; Owner: postgres
+-- Name: usage usage_pkey; Type: CONSTRAINT; Schema: mc_demo; Owner: postgres
 --
 
-ALTER TABLE ONLY mc_demo.usage_dim
-    ADD CONSTRAINT usage_dim_pkey PRIMARY KEY (usage_id);
+ALTER TABLE ONLY mc_demo.usage
+    ADD CONSTRAINT usage_pkey PRIMARY KEY (usage_id);
 
 
 -- Completed on 2019-10-24 10:20:51 CDT

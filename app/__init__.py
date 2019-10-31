@@ -35,6 +35,10 @@ def create_app(config_name):
   csrf.exempt(control_blueprint)
   app.register_blueprint(control_blueprint)
 
+  from .usage import usage as usage_blueprint
+  csrf.exempt(usage_blueprint)
+  app.register_blueprint(usage_blueprint)
+
   from .recipe import recipe as recipe_blueprint
   app.register_blueprint(recipe_blueprint)
   
