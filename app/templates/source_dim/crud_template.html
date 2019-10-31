@@ -257,54 +257,58 @@ $(document).ready(function(){
 		}
 	});
 $(document).on("click", ".edit", function () {
-	 var myControlId = $(this).data('id');
-	 $(".modal-body #controlid").val( myControlId );
-     var myControlName = $(this).data('name');
-     $(".modal-body #name").val( myControlName );
-	 var myControlDesc = $(this).data('description');
-     $(".modal-body #description").val( myControlDesc );
+	 var mySource_DimId = $(this).data('id');
+	 $(".modal-body #source_dimid").val( mySource_DimId );
+     var mySource_DimName = $(this).data('name');
+     $(".modal-body #name").val( mySource_DimName );
+	 var mySource_DimDesc = $(this).data('description');
+	 $(".modal-body #description").val( mySource_DimDesc );
+	 var mySource_DimParent = $(this).data('parent_id');
+	 $(".modal-body #parent_id").val( mySource_DimParent );
+	 var mySource_DimScore = $(this).data('score');
+     $(".modal-body #score").val( mySource_DimScore );
 });
 $(document).on("click", ".delete", function () {
-	 var myControlId = $(this).data('id');
-	 $(".modal-body #controlid").val( myControlId );
-     var myControlName = $(this).data('name');
-     $(".modal-body #controlname").val( myControlName );
-	 var myControlDesc = $(this).data('description');
-     $(".modal-body #controldescripition").val( myControlDesc );
+	 var mySource_DimId = $(this).data('id');
+	 $(".modal-body #source_dimid").val( mySource_DimId );
+     var mySource_DimName = $(this).data('name');
+     $(".modal-body #source_dimname").val( mySource_DimName );
+	 var mySource_DimDesc = $(this).data('description');
+     $(".modal-body #source_dimdescripition").val( mySource_DimDesc );
 });
 $(function(){
-	$('#addControlForm').submit(function(e){
+	$('#addSource_DimForm').submit(function(e){
 		e.preventDefault();
 		$.ajax({
-			url: "/controls/add",
+			url: "/source_dims/add",
 			type: "POST",
 			contentType: 'application/json;charset=UTF-8',
-			data: JSON.stringify($('#addControlForm').serializeArray().reduce(function(acc,cur) { acc[cur.name] = cur.value ; return acc }, {})),
+			data: JSON.stringify($('#addSource_DimForm').serializeArray().reduce(function(acc,cur) { acc[cur.name] = cur.value ; return acc }, {})),
 			success: function(data){
-				$('#addControlForm').modal('hide');
+				$('#addSource_DimForm').modal('hide');
 				location.reload();
 			}
 		});
 	});
 });
 $(function(){
-	$('#editControlForm').submit(function(e){
-		var edid = $('#editControlForm #controlid').val().trim();
-		var urlAjax = "/controls/edit/" + edid;
+	$('#editSource_DimForm').submit(function(e){
+		var edid = $('#editSource_DimForm #source_dimid').val().trim();
+		var urlAjax = "/source_dims/edit/" + edid;
 		e.preventDefault();
 		$.ajax({
 			url: urlAjax,
 			type: "POST",
 			contentType: 'application/json;charset=UTF-8',
-			data: JSON.stringify($('#editControlForm').serializeArray().reduce(function(acc,cur) { acc[cur.name] = cur.value ; return acc }, {})),
+			data: JSON.stringify($('#editSource_DimForm').serializeArray().reduce(function(acc,cur) { acc[cur.name] = cur.value ; return acc }, {})),
 			success: function(data){
 				if (data.redirect) {
             		// data.redirect contains the string URL to redirect to
-					$('#editControlForm').modal('hide');
+					$('#editSource_DimForm').modal('hide');
             		window.location.href = data.redirect;
         		} else {
             		// data.form contains the HTML for the replacement form
-            		$("#editControlform").replaceWith(data.form);
+            		$("#editSource_Dimform").replaceWith(data.form);
 					location.reload();
         		}
 			}
@@ -312,9 +316,9 @@ $(function(){
 	});
 });
 $(function(){
-	$('#deleteControlForm').submit(function(e){
-		var delid = $('#deleteControlForm #controlid').val().trim();
-		var urlAjax = "/controls/delete/" + delid;
+	$('#deleteSource_DimForm').submit(function(e){
+		var delid = $('#deleteSource_DimForm #source_dimid').val().trim();
+		var urlAjax = "/source_dims/delete/" + delid;
 		e.preventDefault();
 		$.ajax({
 			url: urlAjax,
@@ -324,11 +328,11 @@ $(function(){
 			success: function(data){
 				if (data.redirect) {
             		// data.redirect contains the string URL to redirect to
-					$('#deleteControlForm').modal('hide');
+					$('#deleteSource_DimForm').modal('hide');
             		window.location.href = data.redirect;
         		} else {
             		// data.form contains the HTML for the replacement form
-            		$("#deleteControlForm").replaceWith(data.form);
+            		$("#deleteSource_DimForm").replaceWith(data.form);
 					location.reload();
         		}
 			}
@@ -344,11 +348,11 @@ $(function(){
             <div class="table-title">
                 <div class="row">
                     <div class="col-sm-6">
-						<h2>Manage <b>Controls</b></h2>
+						<h2>Manage <b>Source Dimensions</b></h2>
 					</div>
 					<div class="col-sm-6">
-						<a href="#addControlModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Control</span></a>
-						<a href="#deleteControlModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>						
+						<a href="#addSource_DimModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add</span></a>
+						<a href="#deleteSource_DimModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>						
 					</div>
                 </div>
             </div>
@@ -361,29 +365,34 @@ $(function(){
 								<label for="selectAll"></label>
 							</span>
 						</th>
-                        <th>Control Name</th>
+                        <th>Name</th>
 						<th>Description</th>
-						<th>Actions</th>
+						<th>Parent Id</th>
+						<th>Score</th>
+						<th>Edit</th>
+						<th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for control in controls %}
+                    {% for source_dim in source_dims %}
                         <tr>
 							<td>
 								<span class="custom-checkbox">
-									<input type="checkbox" id="{{ 'control' ~ control.control_id }}" name="options[]" value="{{ control.control_id }}" >
+									<input type="checkbox" id="{{ 'source_dim' ~ source_dim.source_id }}" name="options[]" value="{{ source_dim.source_id }}" >
 									<label for="checkbox1"></label>
 								</span>
 							</td>
-                  			<td> {{ control.control_name }} </td>
-                  			<td> {{ control.control_description }} </td>
-                  			<td>
-								<a href="#editControlModal" class="edit" data-toggle="modal" data-id="{{ control.control_id }}" data-name="{{ control.control_name }}" data-description="{{ control.control_description }}">
+                  			<td> {{ source_dim.source_name }} </td>
+                  			<td> {{ source_dim.source_descr }} </td>
+							<td> {{ source_dim.parent_source_id }} </td>  
+							<td> {{ source_dim.similarity_score }} </td>
+							<td>
+								<a href="#editSource_DimModal" class="edit" data-toggle="modal" data-id="{{ source_dim.source_id }}" data-name="{{ source_dim.source_name }}" data-description="{{ source_dim.source_descr }}">
 									<i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
 								</a>
                   			</td>
                   			<td>
-								<a href="#deleteControlModalOne" class="delete" data-toggle="modal" data-id="{{ control.control_id }}" data-name="{{ control.control_name }}" data-description="{{ control.control_description }}"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+								<a href="#deleteSource_DimModalOne" class="delete" data-toggle="modal" data-id="{{ source_dim.source_id }}" data-name="{{ source_dim.source_name }}" data-description="{{ source_dim.source_descr }}"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
                   			</td>
                 		</tr>
               		{% endfor %}
@@ -396,12 +405,12 @@ $(function(){
         </div>
     </div>
 	<!-- Add Modal HTML -->
-	<div id="addControlModal" class="modal fade">
+	<div id="addSource_DimModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form id="addControlForm">
+				<form id="addSource_DimForm">
 					<div class="modal-header">						
-						<h4 class="modal-title">Add Control</h4>
+						<h4 class="modal-title">Add Source Dimension</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
 					<div class="modal-body">					
@@ -412,7 +421,15 @@ $(function(){
 						<div class="form-group">
 							<label>Description</label>
 							<input type="text" name="description" class="form-control" required>
-						</div>				
+						</div>		
+						<div class="form-group">
+							<label>Parent Id</label>
+							<input type="number" name="parent_id" class="form-control" required>
+						</div>	
+						<div class="form-group">
+							<label>Score</label>
+							<input type="number" name="score" class="form-control" required>
+						</div>			
 					</div>
 					<div class="modal-footer">
 						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
@@ -423,16 +440,16 @@ $(function(){
 		</div>
 	</div>
 	<!-- Edit Modal HTML -->
-	<div id="editControlModal" class="modal fade">
+	<div id="editSource_DimModal" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form id="editControlForm">
+				<form id="editSource_DimForm">
 					<div class="modal-header">						
-						<h4 class="modal-title">Edit Control</h4>
+						<h4 class="modal-title">Edit Source Dimension</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
 					<div class="modal-body">					
-						<input type="hidden" id="controlid">
+						<input type="hidden" id="source_dimid">
 						<div class="form-group">
 							<label>Name</label>
 							<input type="text" class="form-control" name="name" id="name" required>
@@ -440,6 +457,14 @@ $(function(){
 						<div class="form-group">
 							<label>Description</label>
 							<input type="text" class="form-control" name="description" id="description" required>
+						</div>
+						<div class="form-group">
+							<label>Parent Id</label>
+							<input type="number" class="form-control" name="parent_id" id="parent_id" required>
+						</div>
+						<div class="form-group">
+							<label>Score</label>
+							<input type="number" class="form-control" name="score" id="score" required>
 						</div>			
 					</div>
 					<div class="modal-footer">
@@ -451,25 +476,33 @@ $(function(){
 		</div>
 	</div>
 	<!-- Delete Modal HTML -->
-	<div id="deleteControlModalOne" class="modal fade">
+	<div id="deleteSource_DimModalOne" class="modal fade">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<form id="deleteControlForm">
+				<form id="deleteSource_DimForm">
 					<div class="modal-header">						
-						<h4 class="modal-title">Delete Control</h4>
+						<h4 class="modal-title">Delete Source Dimension</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
 					<div class="modal-body">					
 						<p>Are you sure you want to delete this Record?</p>
 						<div class="form-group row">
-							<input type="hidden" readonly id="controlid">
-							<label for="controlname" class="col-sm-2 col-form-label">Name</label>
+							<input type="hidden" readonly id="source_dimid">
+							<label for="source_dimname" class="col-sm-2 col-form-label">Name</label>
 							<div class="col-sm-10 ml-1">
-								<input type="text" readonly class="form-control-plaintext" id="controlname">
+								<input type="text" readonly class="form-control-plaintext" id="source_dimname">
 							</div>
-							<label for="controldescripition" class="col-sm-2 col-form-label">Description</label>
+							<label for="source_dimdescripition" class="col-sm-2 col-form-label">Description</label>
 							<div class="col-sm-10 ml-1">
-								<input type="text" readonly class="form-control-plaintext" id="controldescripition">
+								<input type="text" readonly class="form-control-plaintext" id="source_dimdescripition">
+							</div>
+							<label for="source_dimparent_id" class="col-sm-2 col-form-label">Parent Id</label>
+							<div class="col-sm-10 ml-1">
+								<input type="text" readonly class="form-control-plaintext" id="source_dimparent_id">
+							</div>
+							<label for="source_dimscore" class="col-sm-2 col-form-label">Score</label>
+							<div class="col-sm-10 ml-1">
+								<input type="text" readonly class="form-control-plaintext" id="source_dimscore">
 							</div>
 						</div>
 						<p class="text-warning"><small>This action cannot be undone.</small></p>
@@ -483,4 +516,4 @@ $(function(){
 		</div>
 	</div>
 </body>
-</html>                                		                            
+</html>            
