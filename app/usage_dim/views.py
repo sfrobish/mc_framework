@@ -6,7 +6,7 @@ import json
 from . import usage
 from .forms import UsageForm
 from .. import db
-from ..models import usage as usagedbo
+from ..models import usage_dim as usagedbo
   
 
 @usage.route('/usage', methods=['GET', 'POST'])
@@ -21,7 +21,7 @@ def list_usage():
   pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
 
-  return render_template('usage/crud_template.html',
+  return render_template('usage/usage_template.html',
                            usage=pagination_usage,
                            pagination=pagination,
                            page=page,
@@ -75,14 +75,8 @@ def edit_usage(id):
   db.session.commit()
   flash('You have successfully edited the usage.')
 
-  # redirect to the departments page
+  # redirect to the usage list page
   return redirect(url_for('usage.list_usage'))
-
-  form.description.data = cntldata.usage_descr
-  form.name.data = cntldata.usage_name
-  return render_template('usage/usage.html', action="Edit",
-                           add_usage=add_usage, form=form,
-                           usage=cntldata, title="Edit Source")
 
 
 @usage.route('/usage/delete/<int:id>', methods=['GET', 'POST'])
