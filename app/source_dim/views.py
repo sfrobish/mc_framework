@@ -9,7 +9,7 @@ from .. import db
 from ..models import source_dim as source_dimdbo
   
 
-@source_dim.route('/source_dims', methods=['GET', 'POST'])
+@source_dim.route('/source', methods=['GET', 'POST'])
 def list_source_dims():
   
   # List all source_dims
@@ -29,7 +29,7 @@ def list_source_dims():
                            title="Source_Dims")
 
 
-@source_dim.route('/source_dims/add', methods=['GET', 'POST'])
+@source_dim.route('/source/add', methods=['GET', 'POST'])
 def add_source_dim():
   # Add a source_dim to the database
 
@@ -60,7 +60,7 @@ def add_source_dim():
   return redirect(url_for('source_dim.list_source_dims'))
 
 
-@source_dim.route('/source_dims/edit/<int:id>', methods=['GET', 'POST'])
+@source_dim.route('/source/edit/<int:id>', methods=['GET', 'POST'])
 def edit_source_dim(id):
 
   # Edit a source_dim
@@ -86,7 +86,7 @@ def edit_source_dim(id):
                          source_dim=cntldata, title="Edit Source_Dim")
 
 
-@source_dim.route('/source_dims/delete/<int:id>', methods=['GET', 'POST'])
+@source_dim.route('/source/delete/<int:id>', methods=['GET', 'POST'])
 def delete_source_dim(id):
 
   # Delete a source_dim from the database

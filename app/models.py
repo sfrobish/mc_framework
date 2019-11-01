@@ -57,15 +57,20 @@ class control_recipe(basemodel):
     self.recipe_id = kwargs.get("recipe_id")
     self.control_id = kwargs.get("control_id")
 
-class usage(basemodel):
-  __tablename__ = "usage"
+
+class usage_dim(basemodel):
+  __tablename__ = "usage_dim"
   usage_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
   usage_name = db.Column(db.String(60), unique=True, nullable=False)
   usage_descr = db.Column(db.String(200), unique=False, nullable=False)
+  parent_usage_id = db.Column(db.Integer, unique=False, nullable=True)
+  similarity_score = db.Column(db.Integer, unique=False, nullable=False)
 
   def __init__(self, **kwargs):
-    self.usage_id = kwargs.get("usage_id")
+    self.usage_name = kwargs.get("usage_name")
     self.usage_descr = kwargs.get("usage_descr")
+    self.parent_usage_id = kwargs.get("parent_usage_id")
+    self.similarity_score = kwargs.get("similarity_score")
 
 
 class source_dim(basemodel):
@@ -73,7 +78,7 @@ class source_dim(basemodel):
   source_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
   source_name = db.Column(db.String(60), unique=True, nullable=False)
   source_descr = db.Column(db.String(200), unique=False, nullable=False)
-  parent_source_id = db.Column(db.Integer, unique=True, nullable=False)
+  parent_source_id = db.Column(db.Integer, unique=True, nullable=True)
   similarity_score = db.Column(db.Integer, unique=False, nullable=False)
 
   def __init__(self, **kwargs):
@@ -83,42 +88,74 @@ class source_dim(basemodel):
     self.similarity_score = kwargs.get("similarity_score")
 
 
-class classification(basemodel):
-  __tablename__ = "classification"
-  classification_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
-  classification_version = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
-  domain_id = db.Column(db.Integer, unique=False, nullable=True, primary_key=False)
-  source_id = db.Column(db.Integer, unique=False, nullable=True, primary_key=False)
-  usage_id = db.Column(db.Integer, unique=False, nullable=True, primary_key=False)
-  geo_id = db.Column(db.Integer, unique=False, nullable=True, primary_key=False)
-  rights_id = db.Column(db.Integer, unique=False, nullable=True, primary_key=False)
-  data_elem_class_id = db.Column(db.Integer, unique=False, nullable=True, primary_key=False)
-  control_recipe_id = db.Column(db.Integer, unique=False, nullable=False, primary_key=False)
-  classification_label = db.Column(db.String(60), unique=False, nullable=False, primary_key=False)
-  created_tstmp = db.Column(db.TIMESTAMP, nullable=False)
+class geography_dim(basemodel):
+  __tablename__ = "geography_dim"
+  geo_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
+  geo_name = db.Column(db.String(60), unique=True, nullable=False)
+  geo_descr = db.Column(db.String(200), unique=False, nullable=False)
+  parent_geo_id = db.Column(db.Integer, unique=True, nullable=True)
+  similarity_score = db.Column(db.Integer, unique=False, nullable=False)
 
   def __init__(self, **kwargs):
-    self.classification_id = kwargs.get("classification_id")
-    self.domain_id = kwargs.get("domain_id")
-    self.source_id = kwargs.get("source_id")
-    self.usage_id = kwargs.get("usage_id")
-    self.geo_id = kwargs.get("geo_id")
-    self.rights_id = kwargs.get("rights_id")
-    self.control_recipe_id = kwargs.get("control_recipe_id")
-    self.classification_label = kwargs.get("classification_label")
+    self.geo_name = kwargs.get("geo_name")
+    self.geo_descr = kwargs.get("geo_descr")
+    self.parent_geo_id = kwargs.get("parent_geo_id")
+    self.similarity_score = kwargs.get("similarity_score")
 
 
 class domain_dim(basemodel):
   __tablename__ = "domain_dim"
   domain_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
   domain_name = db.Column(db.String(60), unique=True, nullable=False)
-  domain_description = db.Column(db.String(200), unique=False, nullable=False)
-  parent_domain_id = db.Column(db.Integer, unique=False, nullable=False)
+  domain_descr = db.Column(db.String(200), unique=False, nullable=False)
+  parent_domain_id = db.Column(db.Integer, unique=False, nullable=True)
   similarity_score = db.Column(db.Integer, unique=False, nullable=False)
 
   def __init__(self, **kwargs):
     self.domain_id = kwargs.get("domain_id")
     self.domain_name = kwargs.get("domain_name")
-    self.domain_description = kwargs.get("domain_description")
+    self.domain_descr = kwargs.get("domain_descr")
     self.parent_domain_id = kwargs.get("parent_domain_id")
     self.similarity_score = kwargs.get("similarity_score")
+
+
+class contract_dim(basemodel):
+  __tablename__ = "domain_dim"
+  contract_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
+  contract_name = db.Column(db.String(60), unique=True, nullable=False)
+  contract_descr = db.Column(db.String(200), unique=False, nullable=False)
+  parent_contract_id = db.Column(db.Integer, unique=False, nullable=True)
+  similarity_score = db.Column(db.Integer, unique=False, nullable=False)
+
+  def __init__(self, **kwargs):
+    self.contract_id = kwargs.get("contract_id")
+    self.contract_name = kwargs.get("contract_name")
+    self.contract_descr = kwargs.get("contract_descr")
+    self.parent_contract_id = kwargs.get("parent_contract_id")
+    self.similarity_score = kwargs.get("similarity_score")
+
+
+class classification(basemodel):
+  __tablename__ = "classification"
+  classification_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
+  domain_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  source_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  geography_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  usage_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  rights_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  contract_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  sensitive_field_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  recipe_id = db.Column(db.Integer, unique=False, nullable=False, primary_key=False)
+  label = db.Column(db.String(60), unique=False, nullable=False, primary_key=False)
+
+  def __init__(self, **kwargs):
+    self.classification_id = kwargs.get("classification_id")
+    self.domain_list = kwargs.get("domain_list")
+    self.source_list = kwargs.get("source_list")
+    self.geography_list = kwargs.get("geography_list")
+    self.usage_list = kwargs.get("usage_list")
+    self.rights_list = kwargs.get("rights_list")
+    self.contract_list = kwargs.get("contract_list")
+    self.sensitive_field_list = kwargs.get("sensitive_field_list")
+    self.recipe_id = kwargs.get("recipe_id")
+    self.label = kwargs.get("label")
