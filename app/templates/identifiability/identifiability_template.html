@@ -24,7 +24,7 @@
 						</span>
 					</th>
 					<th>Field List</th>
-					<th>Is PII</th>
+					<th>Risk Type</th>
 					<th>Risk Score</th>
 					<th>Edit</th>
 					<th>Delete</th>
@@ -40,15 +40,15 @@
 							</span>
 						</td>
 						<td> {{ ident_dim.field_list }} </td>
-						<td> {{ ident_dim.is_pii }} </td>
+						<td> {{ ident_dim.risk_type }} </td>
 						<td> {{ ident_dim.risk_score }} </td>
 						<td>
-							<a href="#editSDFModal" class="edit" data-toggle="modal" data-id="{{ ident_dim.rule_id }}" data-fieldlist="{{ ident_dim.field_list }}" data-ispii="{{ ident_dim.is_pii }}" data-score="{{ ident_dim.risk_score }}">
+							<a href="#editSDFModal" class="edit" data-toggle="modal" data-id="{{ ident_dim.rule_id }}" data-fieldlist="{{ ident_dim.field_list }}" data-risktype="{{ ident_dim.risk_type }}" data-score="{{ ident_dim.risk_score }}">
 								<i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
 							</a>
 						</td>
 						<td>
-							<a href="#deleteIdentRuleModalOne" class="delete" data-toggle="modal" data-id="{{ ident_dim.rule_id }}" data-fieldlist="{{ ident_dim.field_list }}" data-ispii="{{ ident_dim.is_pii }}" data-score="{{ ident_dim.risk_score }}">
+							<a href="#deleteIdentRuleModalOne" class="delete" data-toggle="modal" data-id="{{ ident_dim.rule_id }}" data-fieldlist="{{ ident_dim.field_list }}" data-risktype="{{ ident_dim.risk_type }}" data-score="{{ ident_dim.risk_score }}">
 								<i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
 							</a>
 						</td>
@@ -77,8 +77,8 @@
 						<input type="text" name="field_list" class="form-control" required>
 					</div>
 					<div class="form-group">
-						<label>Is PII</label>
-						<input type="checkbox" name="is_pii" class="form-control">
+						<label>Risk Type</label>
+						<input type="text" name="risk_type" class="form-control" required>
 					</div>		
 					<div class="form-group">
 						<label>Risk Score</label>
@@ -109,8 +109,8 @@
 						<input type="text" class="form-control" name="field_list" id="field_list" required>
 					</div>
 					<div class="form-group">
-						<label>Is PII</label>
-						<input type="checkbox" class="form-control" name="is_pii" id="is_pii" required>
+						<label>Risk Type</label>
+						<input type="text" class="form-control" name="risk_type" id="risk_type" required>
 					</div>
 					<div class="form-group">
 						<label>Risk Score</label>
@@ -142,9 +142,9 @@
 						<div class="col-sm-10 ml-1">
 							<input type="text" readonly class="form-control-plaintext" id="field_list">
 						</div>
-						<label for="is_pii" class="col-sm-2 col-form-label">Is PII</label>
+						<label for="risk_type" class="col-sm-2 col-form-label">Risk Type</label>
 						<div class="col-sm-10 ml-1">
-							<input type="checkbox" readonly class="form-control-plaintext" id="is_pii">
+							<input type="text" readonly class="form-control-plaintext" id="risk_type">
 						</div>
 						<label for="risk_score" class="col-sm-2 col-form-label">Risk Score</label>
 						<div class="col-sm-10 ml-1">
@@ -192,8 +192,8 @@ $(document).on("click", ".edit", function () {
 		$(".modal-body #rule_id").val( myIdentId );
 		var myIdentFieldList = $(this).data('fieldlist');
 		$(".modal-body #field_list").val( myIdentFieldList );
-		var myIdentIsPII = $(this).data('ispii');
-		$(".modal-body #is_pii").val( myIdentIsPII );
+		var myIdentRiskType = $(this).data('risktype');
+		$(".modal-body #risk_type").val( myIdentRiskType );
 		var myIdentScore = $(this).data('score');
 		$(".modal-body #risk_score").val( myIdentScore );
 });
@@ -202,8 +202,8 @@ $(document).on("click", ".delete", function () {
 		$(".modal-body #rule_id").val( myIdentId );
 		var myIdentFieldList = $(this).data('fieldlist');
 		$(".modal-body #field_list").val( myIdentFieldList );
-		var myIdentIsPII = $(this).data('ispii');
-		$(".modal-body #is_pii").val( myIdentIsPII );
+		var myIdentRiskType = $(this).data('risktype');
+		$(".modal-body #risk_type").val( myIdentRiskType );
 		var myIdentScore = $(this).data('score');
 		$(".modal-body #risk_score").val( myIdentScore );
 });

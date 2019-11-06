@@ -26,7 +26,7 @@ def list_ident_rules():
                            pagination=pagination,
                            page=page,
                            per_page=per_page,
-                           title="Source_Dims")
+                           title="Identifiability Rules")
 
 
 @ident_dim.route('/identifiability/add', methods=['GET', 'POST'])
@@ -43,7 +43,7 @@ def add_ident_dim():
   print(form.errors)
   if form.validate_on_submit():
     print("VALID") """
-  identdata = identdbo(is_pii=form.is_pii.data,
+  identdata = identdbo(risk_type=form.risk_type.data,
                        risk_score=form.risk_score.data,
                        field_list=form.field_list.data)
 
@@ -69,7 +69,7 @@ def edit_ident_dim(id):
   identdata = identdbo.query.get_or_404(id)
   form = IdentifiabilityForm(obj=identdata)
   #if form.validate_on_submit():
-  identdata.is_pii = form.is_pii.data
+  identdata.risk_type = form.risk_type.data
   identdata.risk_score = form.risk_score.data
   identdata.field_list = form.field_list.data
   

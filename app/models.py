@@ -154,13 +154,13 @@ class sdf_dim(basemodel):
 class ident_dim(basemodel):
   __tablename__ = "identifiability_rules"
   rule_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
-  is_pii = db.Column(db.Boolean, unique=False, nullable=False)
+  risk_type = db.Column(db.String(20), unique=False, nullable=False)
   risk_score = db.Column(db.Integer, unique=False, nullable=False)
   field_list = db.Column(db.String(1000), unique=False, nullable=False)
 
   def __init__(self, **kwargs):
     self.rule_id = kwargs.get("rule_id")
-    self.is_pii = kwargs.get("is_pii")
+    self.risk_type = kwargs.get("risk_type")
     self.risk_score = kwargs.get("risk_score")
     self.field_list = kwargs.get("field_list")
 
