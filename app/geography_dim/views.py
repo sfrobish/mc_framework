@@ -21,7 +21,7 @@ def list_geography():
   pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
 
-  return render_template('geography/geography_template.html',
+  return render_template('geography_dim/geography_template.html',
                            geography=pagination_geography,
                            pagination=pagination,
                            page=page,
@@ -66,27 +66,23 @@ def add_geography():
 @geography.route('/geography/edit/<int:id>', methods=['GET', 'POST'])
 def edit_geography(id):
 
+  print("made it " + str(id))
   # Edit a geography
   add_geography = False
 
   geodata = geographydbo.query.get_or_404(id)
+  
   form = GeographyForm(obj=geodata)
   #if form.validate_on_submit():
   geodata.geo_name = form.name.data
   geodata.geo_descr = form.description.data
   geodata.parent_geo_id = form.parent.data
-  geodata.similarity_score=form.similarity.data
+  geodata.similarity_score = form.similarity.data
   db.session.commit()
   flash('You have successfully edited the geography.')
 
   # redirect to the departments page
   return redirect(url_for('geography.list_geography'))
-
-  #form.description.data = geodata.geo_descr
-  #form.name.data = geodata.geo_name
-  #return render_template('geography/geography.html', action="Edit",
-  #                        add_geography=add_geography, form=form,
-  #                        geography=geodata, title="Edit geography")
 
 
 @geography.route('/geography/delete/<int:id>', methods=['GET', 'POST'])
@@ -101,5 +97,3 @@ def delete_geography(id):
 
   # redirect to the geography page
   return redirect(url_for('geography.list_geography'))
-
-  return render_template(title="Delete geography")

@@ -21,7 +21,7 @@
 <body>
     <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="#">Mastercard</a>
+            <a class="navbar-brand" href="#">Navbar</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -29,26 +29,24 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="{{ url_for('home.homepage') }}">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Edit Controls</a>
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Dropdown
+                    </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{{ url_for('control.list_controls') }}">Controls</a>
-                        <a class="dropdown-item" href="{{ url_for('recipe.list_recipes') }}">Recipes</a>
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
                     </div>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Edit Dimensions</a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{{ url_for('domain.list_domains') }}">Domain</a>
-                        <a class="dropdown-item" href="{{ url_for('source_dim.list_source_dims') }}">Source</a>
-                        <a class="dropdown-item" href="{{ url_for('geography.list_geography') }}">Geography</a>
-                        <a class="dropdown-item" href="{{ url_for('usage.list_usage') }}">Usage</a>
-                        <a class="dropdown-item" href="{{ url_for('contract.list_contracts') }}">Contract</a>
-                    </div>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
                 </li>
                 </ul>
             </div>
@@ -59,6 +57,29 @@
       {% endblock %}
       <div class="push"></div>
     </div>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <ul class="list-group list-group-horizontal">
+                      <li><a href="{{ url_for('home.homepage') }}">Home</a></li>
+                      <li><a href="{{ url_for('domain.list_domains') }}">Domain Dimension</a></li>
+                      <li><a href="{{ url_for('geography.list_geography') }}">Geography Dimension</a></li>
+                      <li><a href="{{ url_for('usage.list_usage') }}">Usage Dimension</a></li>
+                      <li><a href="{{ url_for('source_dim.list_source_dims') }}">Source Dimension</a></li>
+                      <li><a href="{{ url_for('contract.list_contracts') }}">Domain Dimension</a></li>
+                      <li class="footer-menu-divider">&sdot;</li>
+                    </ul>
+                    <ul class="list-group list-group-horizontal">
+                        <li><a href="{{ url_for('control.list_controls') }}">Controls</a></li>
+                        <li><a href="{{ url_for('recipe.list_recipes') }}">Recipes</a></li>
+                        <li><a href="{{ url_for('control_recipe.list_control_recipes') }}">Control-Recipes</a></li>
+                    </ul>
+                    <p class="copyright text-muted small">Copyright &copy; 2019. All Rights Reserved</p>
+                </div>
+            </div>
+        </div>
+    </footer>
     <script type="text/javascript">
         var csrf_token = "{{ csrf_token() }}";
     

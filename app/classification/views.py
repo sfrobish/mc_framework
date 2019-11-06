@@ -6,27 +6,28 @@ import json
 from . import classification
 from .forms import ClassificationForm
 from .. import db
-from ..models import classification as classificationdbo
+from ..models import domain_dim as domaindbo
+from ..models import geography_dim as geographydbo
+from ..models import source_dim as sourcedbo
+from ..models import usage_dim as usagedbo
   
 
-@classification.route('/classfications', methods=['GET', 'POST'])
-def list_classifications():
+@classification.route('/classification', methods=['GET', 'POST'])
+def start_new_classification():
   
   # List all controls
-  classificationlist = classificationdbo.query.order_by(asc(classificationdbo.label)).all()
-
-  page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
-  total = len(classificationlist)
-  pagination_classifications = classificationlist[offset: offset + per_page]
-  pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+  domainlist = domaindbo.query.order_by(asc(domaindbo.domain_name)).all()
+  geographylist = geographydbo.query.order_by(asc(geographydbo.geo_name)).all()
+  sourcelist = sourcedbo.query.order_by(asc(sourcedbo.source_name)).all()
+  usagelist = usagedbo.query.order_by(asc(usagedbo.usage_name)).all()
 
 
-  return render_template('classification/classification_template.html',
-                           classifications=pagination_classifications,
-                           pagination=pagination,
-                           page=page,
-                           per_page=per_page,
-                           title="Classifications")
+  return render_template('classification/classification_multitab_template.html',
+                           domainlist=domainlist,
+                           geographylist=geographylist,
+                           sourcelist=sourcelist,
+                           usagelist=usagelist,
+                           title="Get Classification")
 
 
 @classification.route('/classifications/add', methods=['GET', 'POST'])

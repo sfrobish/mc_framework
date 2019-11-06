@@ -6,12 +6,12 @@
     <div class="table-title">
       <div class="row">
         <div class="col-sm-6">
-          <h2>Manage <b>Geography</b></h2>
+          <h2>Manage <b>Recipe</b></h2>
         </div>
         <div class="col-sm-6">
-          <a href="#addGeographyModal" class="btn btn-success" data-toggle="modal"><i
-              class="material-icons">&#xE147;</i> <span>Add New Geography</span></a>
-          <a href="#deleteGeographyModal" class="btn btn-danger" data-toggle="modal"><i
+          <a href="#addRecipeModal" class="btn btn-success" data-toggle="modal"><i
+              class="material-icons">&#xE147;</i> <span>Add New Recipe</span></a>
+          <a href="#deleteRecipeModal" class="btn btn-danger" data-toggle="modal"><i
               class="material-icons">&#xE15C;</i> <span>Delete</span></a>
         </div>
       </div>
@@ -25,41 +25,35 @@
               <label for="selectAll"></label>
             </span>
           </th>
-          <th>Geography Name</th>
+          <th>Recipe Name</th>
           <th>Description</th>
-          <th>Parent</th>
-          <th>Similarity</th>
           <th>Actions</th>
-
         </tr>
       </thead>
       <tbody>
-        {% for geography in geography %}
+        {% for recipe in recipelist %}
         <tr>
           <td>
             <span class="custom-checkbox">
-              <input type="checkbox" id="{{ 'geography' ~ geography.geo_id }}" name="options[]"
-                value="{{ geography.geo_id }}">
+              <input type="checkbox" id="{{ 'recipe' ~ recipe.recipe_id }}" name="options[]"
+                value="{{ recipe.recipe_id }}">
               <label for="checkbox1"></label>
             </span>
           </td>
-          <td> {{ geography.geo_name }} </td>
-          <td> {{ geography.geo_descr }} </td>
-          <td> {{ geography.parent_geo_id }} </td>
-          <td> {{ geography.similarity_score }} </td>
+          <td> {{ recipe.recipe_name }} </td>
+          <td> {{ recipe.recipe_description }} </td>
           <td>
-            <a href="#editGeographyModal" class="edit" data-toggle="modal" data-id="{{ geography.geo_id }}"
-              data-name="{{ geography.geo_name }}" data-description="{{ geography.geo_descr }}"
-              data-parent="{{ geography.parent_geo_id }}" data-similarity="{{ geography.similarity_score }}">
+            <a href="#editRecipeModal" class="edit" data-toggle="modal" data-id="{{ recipe.recipe_id }}"
+              data-name="{{ recipe.recipe_name }}" data-description="{{ recipe.recipe_descr }}">
               <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
             </a>
           </td>
           <td>
-            <a href="#deleteGeographyModalOne" class="delete" data-toggle="modal"
-              data-id="{{ geography.geo_id }}" data-name="{{ geography.geo_name }}"
-              data-description="{{ geography.geo_descr }}" data-parent="{{ geography.parent_geo_id }}"
-              data-similarity="{{ geography.similarity_score }}"><i class="material-icons" data-toggle="tooltip"
-                title="Delete">&#xE872;</i></a>
+            <a href="#deleteRecipeModalOne" class="delete" data-toggle="modal"
+              data-id="{{ recipe.recipe_id }}" data-name="{{ recipe.recipe_name }}"
+              data-description="{{ recipe.recipe_descr }}" >
+              <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
+            </a>
           </td>
         </tr>
         {% endfor %}
@@ -72,12 +66,12 @@
   </div>
 </div>
 <!-- Add Modal HTML -->
-<div id="addGeographyModal" class="modal fade">
+<div id="addRecipeModal" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id="addGeographyForm">
+      <form id="addRecipeForm">
         <div class="modal-header">
-          <h4 class="modal-title">Add Geography</h4>
+          <h4 class="modal-title">Add Recipe</h4>
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <div class="modal-body">
@@ -89,14 +83,6 @@
             <label>Description</label>
             <input type="text" name="description" class="form-control" required>
           </div>
-          <div class="form-group">
-            <label>Parent</label>
-            <input type="number" name="parent" class="form-control" >
-          </div>
-          <div class="form-group">
-            <label>Similarity</label>
-            <input type="number" name="similarity" class="form-control" required>
-          </div>
         </div>
         <div class="modal-footer">
           <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
@@ -107,16 +93,16 @@
   </div>
 </div>
 <!-- Edit Modal HTML -->
-<div id="editGeographyModal" class="modal fade">
+<div id="editRecipeModal" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id="editGeographyForm">
+      <form id="editRecipeForm">
         <div class="modal-header">
-          <h4 class="modal-title">Edit Geography</h4>
+          <h4 class="modal-title">Edit Recipe</h4>
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <div class="modal-body">
-          <input type="hidden" name="geographyid" id="geographyid" >
+          <input type="hidden" name="recipeid" id="recipeid" >
           <div class="form-group">
             <label>Name</label>
             <input type="text" class="form-control" name="name" id="name" required>
@@ -124,14 +110,6 @@
           <div class="form-group">
             <label>Description</label>
             <input type="text" class="form-control" name="description" id="description" required>
-          </div>
-          <div class="form-group">
-            <label>Parent</label>
-            <input type="number" class="form-control" name="parent" id="parent">
-          </div>
-          <div class="form-group">
-            <label>Similarity</label>
-            <input type="number" class="form-control" name="similarity" id="similarity" required>
           </div>
         </div>
         <div class="modal-footer">
@@ -143,33 +121,25 @@
   </div>
 </div>
 <!-- Delete Modal HTML -->
-<div id="deleteGeographyModalOne" class="modal fade">
+<div id="deleteRecipeModalOne" class="modal fade">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id="deleteGeographyForm">
+      <form id="deleteRecipeForm">
         <div class="modal-header">
-          <h4 class="modal-title">Delete Geography</h4>
+          <h4 class="modal-title">Delete Recipe</h4>
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         </div>
         <div class="modal-body">
           <p>Are you sure you want to delete this Record?</p>
           <div class="form-group row">
-            <input type="hidden" readonly id="geographyid" name="geographyid">
-            <label for="geographyname" class="col-sm-2 col-form-label">Name</label>
+            <input type="hidden" readonly id="recipeid" name="recipeid">
+            <label for="recipename" class="col-sm-2 col-form-label">Name</label>
             <div class="col-sm-10 ml-1">
-              <input type="text" readonly class="form-control-plaintext" id="geographyname">
+              <input type="text" readonly class="form-control-plaintext" id="recipename">
             </div>
-            <label for="geographydescription" class="col-sm-2 col-form-label">Description</label>
+            <label for="recipedescription" class="col-sm-2 col-form-label">Description</label>
             <div class="col-sm-10 ml-1">
-              <input type="text" readonly class="form-control-plaintext" id="geographydescription">
-            </div>
-            <label for="geographyparent" class="col-sm-2 col-form-label">Parent</label>
-            <div class="col-sm-10 ml-1">
-              <input type="text" readonly class="form-control-plaintext" id="geographyparent">
-            </div>
-            <label for="geographysimilarity" class="col-sm-2 col-form-label">Similarity</label>
-            <div class="col-sm-10 ml-1">
-              <input type="text" readonly class="form-control-plaintext" id="geographysimilarity">
+              <input type="text" readonly class="form-control-plaintext" id="recipedescription">
             </div>
           </div>
           <p class="text-warning"><small>This action cannot be undone.</small></p>
@@ -209,62 +179,54 @@
       }
     });
     $(document).on("click", ".edit", function () {
-      var myGeographyId = $(this).data('id');
-      $(".modal-body #geographyid").val(myGeographyId);
-      var myGeographyName = $(this).data('name');
-      $(".modal-body #name").val(myGeographyName);
-      var myGeographyDesc = $(this).data('description');
-      $(".modal-body #description").val(myGeographyDesc);
-      var myGeographyParent = $(this).data('parent');
-      $(".modal-body #parent").val(myGeographyParent);
-      var myGeographySimilarity = $(this).data('similarity');
-      $(".modal-body #similarity").val(myGeographySimilarity);
+      var myRecipeId = $(this).data('id');
+      $(".modal-body #recipeid").val(myRecipeId);
+      var myRecipeName = $(this).data('name');
+      $(".modal-body #name").val(myRecipeName);
+      var myRecipeDesc = $(this).data('description');
+      $(".modal-body #description").val(myRecipeDesc);
     });
     $(document).on("click", ".delete", function () {
-      var myGeographyId = $(this).data('id');
-      $(".modal-body #geographyid").val(myGeographyId);
-      var myGeographyName = $(this).data('name');
-      $(".modal-body #geographyname").val(myGeographyName);
-      var myGeographyDesc = $(this).data('description');
-      $(".modal-body #geographydescription").val(myGeographyDesc);
-      var myGeographyParent = $(this).data('parent');
-      $(".modal-body #geographyparent").val(myGeographyParent);
-      var myGeographySimilarity = $(this).data('similarity');
-      $(".modal-body #geographysimilarity").val(myGeographySimilarity);
+      var myRecipeId = $(this).data('id');
+      $(".modal-body #recipeid").val(myRecipeId);
+      var myRecipeName = $(this).data('name');
+      $(".modal-body #recipename").val(myRecipeName);
+      var myRecipeDesc = $(this).data('description');
+      $(".modal-body #recipedescription").val(myRecipeDesc);
     });
     $(function () {
-      $('#addGeographyForm').submit(function (e) {
+      $('#addRecipeForm').submit(function (e) {
         e.preventDefault();
         $.ajax({
-          url: "/geography/add",
+          url: "/recipes/add",
           type: "POST",
           contentType: 'application/json;charset=UTF-8',
-          data: JSON.stringify($('#addGeographyForm').serializeArray().reduce(function (acc, cur) { acc[cur.name] = cur.value; return acc }, {})),
+          data: JSON.stringify($('#addRecipeForm').serializeArray().reduce(function (acc, cur) { acc[cur.name] = cur.value; return acc }, {})),
           success: function (data) {
-            $('#addGeographyForm').modal('hide');
+            $('#addRecipeForm').modal('hide');
             location.reload();
           }
         });
       });
     });
     $(function () {
-      $('#editGeographyForm').submit(function (e) {
-        var edid = $('#editGeographyForm #geographyid').val().trim();
-        var urlAjax = "/geography/edit/" + edid;
+      $('#editRecipeForm').submit(function (e) {
+        var edid = $('#editRecipeForm #recipeid').val().trim();
+        var urlAjax = "/recipes/edit/" + edid;
         e.preventDefault();
         $.ajax({
           url: urlAjax,
           type: "POST",
           contentType: 'application/json;charset=UTF-8',
-          data: JSON.stringify($('#editGeographyForm').serializeArray().reduce(function (acc, cur) { acc[cur.name] = cur.value; return acc }, {})),
+          data: JSON.stringify($('#editRecipeForm').serializeArray().reduce(function (acc, cur) { acc[cur.name] = cur.value; return acc }, {})),
           success: function (data) {
             if (data.redirect) {
               // data.redirect contains the string URL to redirect to
-              $('#editGeographyForm').modal('hide');
+              $('#editRecipeForm').modal('hide');
               window.location.href = data.redirect;
             } else {
               // data.form contains the HTML for the replacement form
-              $("#editGeographyform").replaceWith(data.form);
+              $("#editRecipeform").replaceWith(data.form);
               location.reload();
             }
           }
@@ -272,9 +234,9 @@
       });
     });
     $(function () {
-      $('#deleteGeographyForm').submit(function (e) {
-        var delid = $('#deleteGeographyForm #geographyid').val().trim();
-        var urlAjax = "/geography/delete/" + delid;
+      $('#deleteRecipeForm').submit(function (e) {
+        var delid = $('#deleteRecipeForm #recipeid').val().trim();
+        var urlAjax = "/recipes/delete/" + delid;
         e.preventDefault();
         $.ajax({
           url: urlAjax,
@@ -284,11 +246,11 @@
           success: function (data) {
             if (data.redirect) {
               // data.redirect contains the string URL to redirect to
-              $('#deleteGeographyForm').modal('hide');
+              $('#deleteRecipeForm').modal('hide');
               window.location.href = data.redirect;
             } else {
               // data.form contains the HTML for the replacement form
-              $("#deleteGeographyForm").replaceWith(data.form);
+              $("#deleteRecipeForm").replaceWith(data.form);
               location.reload();
             }
           }
