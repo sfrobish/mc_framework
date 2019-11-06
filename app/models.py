@@ -120,7 +120,7 @@ class domain_dim(basemodel):
 
 
 class contract_dim(basemodel):
-  __tablename__ = "domain_dim"
+  __tablename__ = "contract_dim"
   contract_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
   contract_name = db.Column(db.String(60), unique=True, nullable=False)
   contract_descr = db.Column(db.String(200), unique=False, nullable=False)

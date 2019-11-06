@@ -3,7 +3,7 @@ from wtforms import StringField, IntegerField, SubmitField, FieldList
 from wtforms.validators import DataRequired
 
 
-class Classification(FlaskForm):
+class ClassificationForm(FlaskForm):
 
   # Form for admin to add or edit a department
   

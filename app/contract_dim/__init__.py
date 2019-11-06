@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-domain = Blueprint('domain', __name__)
+contract = Blueprint('contract', __name__)
 
 from . import views

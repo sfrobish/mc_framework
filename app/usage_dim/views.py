@@ -9,7 +9,7 @@ from .. import db
 from ..models import usage_dim as usagedbo
   
 
-@usage.route('/usage', methods=['GET', 'POST'])
+@usage.route('/usages', methods=['GET', 'POST'])
 def list_usage():
   
   # List all usages
@@ -21,15 +21,15 @@ def list_usage():
   pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
 
-  return render_template('usage/usage_template.html',
-                           usage=pagination_usage,
+  return render_template('usage_dim/usage_template.html',
+                           usages=pagination_usage,
                            pagination=pagination,
                            page=page,
                            per_page=per_page,
                            title="Usage")
 
 
-@usage.route('/usage/add', methods=['GET', 'POST'])
+@usage.route('/usages/add', methods=['GET', 'POST'])
 def add_usage():
   # Add a usage to the database
 
@@ -43,11 +43,13 @@ def add_usage():
   print(form.errors)
   if form.validate_on_submit():
     print("VALID") """
-  cntldata = usagedbo(usage_name=form.name.data,
-                        usage_descr=form.description.data)
+  usagedata = usagedbo(usage_name=form.name.data,
+                       usage_descr=form.description.data,
+                       parent_usage_id=form.parent_id.data,
+                       similarity_score=form.score.data)
   try:
     # add usage to the database
-    db.session.add(cntldata)
+    db.session.add(usagedata)
     db.session.commit()
     flash('You have successfully added a new usage.')
   except:
@@ -58,20 +60,19 @@ def add_usage():
   return redirect(url_for('usage.list_usage'))
 
 
-@usage.route('/usage/edit/<int:id>', methods=['GET', 'POST'])
+@usage.route('/usages/edit/<int:id>', methods=['GET', 'POST'])
 def edit_usage(id):
 
   # Edit a usage
   add_usage = False
 
-  cntldata = usagedbo.query.get_or_404(id)
-  form = UsageForm(obj=cntldata)
+  usagedata = usagedbo.query.get_or_404(id)
+  form = UsageForm(obj=usagedata)
   #if form.validate_on_submit():
-  cntldata.usage_name = form.name.data
-  cntldata.usage_descr = form.description.data
-  cntldata.usage_parent = form.parent.data
-  cntldata.parent_usage_id = form.parent_usage_id.data
-  cntldata.usage_similarity_score = form.usage_similarity_score
+  usagedata.usage_name = form.name.data
+  usagedata.usage_descr = form.description.data
+  usagedata.parent_usage_id = form.parent_id.data
+  usagedata.similarity_score = form.score.data
   db.session.commit()
   flash('You have successfully edited the usage.')
 
@@ -79,7 +80,7 @@ def edit_usage(id):
   return redirect(url_for('usage.list_usage'))
 
 
-@usage.route('/usage/delete/<int:id>', methods=['GET', 'POST'])
+@usage.route('/usages/delete/<int:id>', methods=['GET', 'POST'])
 def delete_usage(id):
 
   # Delete a usage from the database
@@ -91,5 +92,3 @@ def delete_usage(id):
 
   # redirect to the usage page
   return redirect(url_for('usage.list_usage'))
-
-  return render_template(title="Delete usage")

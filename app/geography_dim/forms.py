@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired, NumberRange
 
 class GeographyForm(FlaskForm):
 
-  # Form for admin to add or edit a department
+  # Form for admin to add or edit a Geography
   name = StringField('Name', validators=[
                      DataRequired(message="Name is invalid")])
   description = StringField('Description', validators=[
