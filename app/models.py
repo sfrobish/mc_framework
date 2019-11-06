@@ -135,6 +135,36 @@ class contract_dim(basemodel):
     self.similarity_score = kwargs.get("similarity_score")
 
 
+class sdf_dim(basemodel):
+  __tablename__ = "sensitive_data_fields"
+  sdf_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
+  sdf_name = db.Column(db.String(60), unique=True, nullable=False)
+  sdf_descr = db.Column(db.String(200), unique=False, nullable=False)
+  sdf_regex = db.Column(db.String(200), unique=False, nullable=False)
+  risk_score = db.Column(db.Integer, unique=False, nullable=False)
+
+  def __init__(self, **kwargs):
+    self.sdf_id = kwargs.get("sdf_id")
+    self.sdf_name = kwargs.get("sdf_name")
+    self.sdf_descr = kwargs.get("sdf_descr")
+    self.sdf_regex = kwargs.get("sdf_regex")
+    self.risk_score = kwargs.get("risk_score")
+
+
+class ident_dim(basemodel):
+  __tablename__ = "identifiability_rules"
+  rule_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
+  is_pii = db.Column(db.Boolean, unique=False, nullable=False)
+  risk_score = db.Column(db.Integer, unique=False, nullable=False)
+  field_list = db.Column(db.String(1000), unique=False, nullable=False)
+
+  def __init__(self, **kwargs):
+    self.rule_id = kwargs.get("rule_id")
+    self.is_pii = kwargs.get("is_pii")
+    self.risk_score = kwargs.get("risk_score")
+    self.field_list = kwargs.get("field_list")
+
+
 class classification(basemodel):
   __tablename__ = "classification"
   classification_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)

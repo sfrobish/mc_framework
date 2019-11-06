@@ -60,8 +60,17 @@ def create_app(config_name):
   csrf.exempt(contract_blueprint)
   app.register_blueprint(contract_blueprint)
 
+  from .sensitive_fields import sdf_dim as sdf_blueprint
+  csrf.exempt(sdf_blueprint)
+  app.register_blueprint(sdf_blueprint)
+
+  from .identifiability import ident_dim as ident_blueprint
+  csrf.exempt(ident_blueprint)
+  app.register_blueprint(ident_blueprint)  
+
   from .classification import classification as classification_blueprint
   csrf.exempt(classification_blueprint)
   app.register_blueprint(classification_blueprint)
+
 
   return app
