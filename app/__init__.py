@@ -36,6 +36,7 @@ def create_app(config_name):
   app.register_blueprint(control_blueprint)
 
   from .recipe import recipe as recipe_blueprint
+  csrf.exempt(recipe_blueprint)
   app.register_blueprint(recipe_blueprint)
   
   from .control_recipe import control_recipe as control_recipe_blueprint

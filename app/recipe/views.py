@@ -7,6 +7,8 @@ from . import recipe
 from .forms import RecipeForm
 from .. import db
 from ..models import recipe as recipedbo
+from ..models import control as controldbo
+from ..models import control_recipe as controlrecipedbo
   
 
 @recipe.route('/recipes', methods=['GET', 'POST'])
@@ -20,14 +22,12 @@ def list_recipes():
   pagination_recipes = recipeslist[offset: offset + per_page]
   pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
-
   return render_template('recipe/recipe_template.html',
                            recipelist=pagination_recipes,
                            pagination=pagination,
                            page=page,
                            per_page=per_page,
                            title="Controls")
-
 
 
 @recipe.route('/recipes/add', methods=['GET', 'POST'])
@@ -57,7 +57,6 @@ def add_recipe():
   
   # redirect to recipes page
   return redirect(url_for('recipe.list_recipes'))
-
 
 @recipe.route('/recipes/edit/<int:id>', methods=['GET', 'POST'])
 def edit_recipe(id):

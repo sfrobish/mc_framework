@@ -22,23 +22,27 @@ def list_control_recipes():
              "  on cr.recipe_id = r.recipe_id ")
   crlist = db.engine.execute(sql)
 
-  return render_template("control_recipe/control_recipes.html",
+  return render_template("recipe/recipe_crud.html",
                          controlrecipes=crlist, title="Control Recipes")
 
 
-@control_recipe.route('/control_recipes/add', methods=['GET', 'POST'])
-def add_control_recipe():
+@control_recipe.route('/control_recipes/add/<int:rid>/<int:cid>', methods=['GET', 'POST'])
+def add_control_recipe(rid, cid):
 
   # Add a control recipe to the database
 
-  add_control_recipe = True
-
-  form = ControlRecipeForm()
-  form.control.choices = [(c.control_id, c.control_name) for c in controldbo.query.order_by("control_name")]
-  form.recipe.choices = [(r.recipe_id, r.recipe_name) for r in recipedbo.query.order_by("recipe_name")]
-  if form.validate_on_submit():
-    crdata = controlrecipedbo(control_id=form.control.data,
-                              recipe_id=form.recipe.data)
+    add_control_recipe = True
+    
+    form = ControlRecipeForm()
+    """   if form.is_submitted:
+      print("Submitted")
+    if form.validate():
+      print("VALID ONE")
+    print(form.errors)
+    if form.validate_on_submit():
+      print("VALID") """
+    crdata = controlrecipedbo(control_id=cid, #form.control_id.data,
+                              recipe_id=rid) #form.recipe_id.data)
     try:
       # add control recipe to the database
       db.session.add(crdata)
@@ -52,9 +56,9 @@ def add_control_recipe():
     return redirect(url_for('control_recipe.list_control_recipes'))
 
   # load control template
-  return render_template('control_recipe/control_recipe.html', action="Add",
-                          add_control_recipe=add_control_recipe, form=form,
-                          title="Add Control Recipe")
+    # return render_template('recipe/recipe_crud.html', action="Add",
+    #                       add_control_recipe=add_control_recipe, form=form,
+    #                       title="Add Control Recipe")
 
 
 @control_recipe.route('/control_recipes/edit/<int:id>', methods=['GET', 'POST'])
