@@ -1,186 +1,284 @@
 {% extends "base.html" %}
 {% block title %}Classification{% endblock %}
 {% block body %}
-<div class="container">
-  <ul class="nav nav-pills">
-      <li class="nav-item">
-          <a class="nav-link active" href="#tabDomain" data-toggle="tab">Domain</a>
-      </li>
-      <li class="nav-item">
-          <a class="nav-link" href="#tabGeo" data-toggle="tab">Geography</a>
-      </li>
-      <li class="nav-item">
-          <a class="nav-link" href="#tabSource" data-toggle="tab">Source</a>
-      </li>
-      <li class="nav-item">
-          <a class="nav-link" href="#tabUsage" data-toggle="tab">Usage</a>
-      </li>
-  </ul>
+<form id=classform>
+  <div class="container">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" href="#tabDomain" data-toggle="tab">Domain</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#tabGeo" data-toggle="tab">Geography</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#tabSource" data-toggle="tab">Source</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#tabUsage" data-toggle="tab">Usage</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#tabFields" data-toggle="tab">Field List</a>
+        </li>
+    </ul>
+  </div>
+
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="tabDomain">
+      <div class="container">
+        <div class="table-wrapper">
+          <div class="table-title">
+            <div class="row">
+              <div class="col-sm-6">
+                <h2>Get a Classification - <b>Domain</b></h2>
+              </div>
+            </div>
+          </div>
+          <table id="tableDomain" class="table table-striped table-hover">
+            <tbody>
+              {% for domain in domainlist %}
+                <tr>
+                  <td>
+                    <span class="custom-checkbox">
+                      <input type="checkbox" id="{{ 'domain' ~ domain.domain_id }}" name="domain"
+                            value="{{ domain.domain_id }}|{{ domain.similarity_score }}">
+                      <label for="checkbox1"></label>
+                    </span>
+                  </td>
+                  <td> {{ domain.domain_name }} </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="container">
+        <div style="overflow:auto;">
+          <div style="float:right;">
+            <button class="btn btn-primary next">Next</button>
+          </div>
+        </div>
+      </div> 
+    </div>
+
+    <div class="tab-pane fade" id="tabGeo">
+      <div class="container">
+        <div class="table-wrapper">
+          <div class="table-title">
+            <div class="row">
+              <div class="col-sm-6">
+                <h2>Get a Classification - <b>Geography</b></h2>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table id="tableGeography" class="table table-striped table-hover">
+              <tbody>
+                {% for geography in geographylist %}
+                  <tr>
+                    <td>
+                      <span class="custom-checkbox">
+                        <input type="checkbox" id="{{ 'geography' ~ geography.geo_id }}" name="geography"
+                              value="{{ geography.geo_id }}|{{ geography.similarity_score }}">
+                        <label for="checkbox1"></label>
+                      </span>
+                    </td>
+                    <td> {{ geography.geo_name }} </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <div style="overflow:auto;">
+          <div style="float:right;">
+            <button class="btn btn-primary previous">Previous</button>
+            <button class="btn btn-primary next">Next</button>
+          </div>
+        </div>
+      </div> 
+    </div>
+
+    <div class="tab-pane fade" id="tabSource">
+      <div class="container">
+        <div class="table-wrapper">
+          <div class="table-title">
+            <div class="row">
+              <div class="col-sm-6">
+                <h2>Get a Classification - <b>Source</b></h2>
+              </div>
+            </div>
+          </div>
+          <table id="tableSource" class="table table-striped table-hover">
+            <tbody>
+              {% for source in sourcelist %}
+                <tr>
+                  <td>
+                    <span class="custom-checkbox">
+                      <input type="checkbox" id="{{ 'source' ~ source.source_id }}" name="source"
+                            value="{{ source.source_id }}|{{ source.similarity_score }}">
+                      <label for="checkbox1"></label>
+                    </span>
+                  </td>
+                  <td> {{ source.source_name }} </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="container">
+        <div style="overflow:auto;">
+          <div style="float:right;">
+            <button class="btn btn-primary previous">Previous</button>
+            <button class="btn btn-primary next">Next</button>
+          </div>
+        </div>
+      </div> 
+    </div>
+
+    <div class="tab-pane fade" id="tabUsage">
+      <div class="container">
+        <div class="table-wrapper">
+          <div class="table-title">
+            <div class="row">
+              <div class="col-sm-6">
+                <h2>Get a Classification - <b>Usage</b></h2>
+              </div>
+            </div>
+          </div>
+          <table id="tableUsage" class="table table-striped table-hover">
+            <tbody>
+              {% for usage in usagelist %}
+                <tr>
+                  <td>
+                    <span class="custom-checkbox">
+                      <input type="checkbox" id="{{ 'usage' ~ usage.usage_id }}" name="usage"
+                            value="{{ usage.usage_id }}|{{ usage.similarity_score }}">
+                      <label for="checkbox1"></label>
+                    </span>
+                  </td>
+                  <td> {{ usage.usage_name }} </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="container">
+        <div style="overflow:auto;">
+          <div style="float:right;">
+            <button class="btn btn-primary previous">Previous</button>
+            <button class="btn btn-primary next">Next</button>
+          </div>
+        </div>
+      </div> 
+    </div>
+
+    <div class="tab-pane fade" id="tabFields">
+      <div class="container">
+        <div class="form-group">
+          <label for="fieldlist">Field List</label>
+          <textarea class="form-control rounded-0" id="fieldlist" rows="3"></textarea>
+        </div>
+      </div>
+      <div class="container">
+        <div style="overflow:auto;">
+          <div style="float:right;">
+            <button class="btn btn-primary previous">Previous</button>
+          </div>
+        </div>
+      </div> 
+    </div>
+
+    <div class="container">
+      <div style="float:right;padding-top: 5px;">
+        <input class="btn btn-success" type="submit" value="Submit">
+      </div>
+    </div>
+  </div>
+</form>
+
+<!-- Nearest Points Modal HTML -->
+<div id="nearestClassificationModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form id="nearestClassificationForm">
+				<div class="modal-header">						
+					<h4 class="modal-title">The nearest classification is below.  Accept this clasification</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">					
+					<div class="form-group">
+						<label>Classification ID</label>
+						<input type="text" readonly name="classificationid" class="form-control" >
+					</div>
+					<div class="form-group">
+						<label>Recipe ID</label>
+						<input type="text" readonly name="recipeid" class="form-control" >
+          </div>		
+          <div class="form-group">
+						<label>Label</label>
+						<input type="text" readonly name="classificationlabel" class="form-control" >
+					</div>			
+				</div>
+				<div class="modal-footer">
+					<input type="button" class="btn btn-danger" data-dismiss="modal" value="Reject">
+					<input type="submit" class="btn btn-success" value="Accept">
+				</div>
+			</form>
+		</div>
+	</div>
 </div>
-<div class="tab-content" id="nav-tabContent">
-  <div class="tab-pane fade show active" id="tabDomain">
-    <div class="container">
-      <div class="table-wrapper">
-        <div class="table-title">
-          <div class="row">
-            <div class="col-sm-6">
-              <h2>Get a Classification - <b>Domain</b></h2>
-            </div>
-          </div>
-        </div>
-        <table class="table table-striped table-hover">
-          <tbody>
-            {% for domain in domainlist %}
-              <tr>
-                <td>
-                  <span class="custom-checkbox">
-                    <input type="checkbox" id="{{ 'domain' ~ domain.domain_id }}" name="options[]"
-                          value="{{ domain.domain_id }}">
-                    <label for="checkbox1"></label>
-                  </span>
-                </td>
-                <td> {{ domain.domain_name }} </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="container">
-      <div style="overflow:auto;">
-        <div style="float:right;">
-          <button class="btn btn-primary next">Next</button>
-        </div>
-      </div>
-    </div> 
-  </div>
-
-  <div class="tab-pane fade" id="tabGeo">
-    <div class="container">
-      <div class="table-wrapper">
-        <div class="table-title">
-          <div class="row">
-            <div class="col-sm-6">
-              <h2>Get a Classification - <b>Geography</b></h2>
-            </div>
-          </div>
-        </div>
-        <table class="table table-striped table-hover">
-          <tbody>
-            {% for geography in geographylist %}
-              <tr>
-                <td>
-                  <span class="custom-checkbox">
-                    <input type="checkbox" id="{{ 'geography' ~ geography.geo_id }}" name="options[]"
-                          value="{{ geography.geo_id }}">
-                    <label for="checkbox1"></label>
-                  </span>
-                </td>
-                <td> {{ geography.geo_name }} </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="container">
-      <div style="overflow:auto;">
-        <div style="float:right;">
-          <button class="btn btn-primary previous">Previous</button>
-          <button class="btn btn-primary next">Next</button>
-        </div>
-      </div>
-    </div> 
-  </div>
-
-  <div class="tab-pane fade" id="tabSource">
-    <div class="container">
-      <div class="table-wrapper">
-        <div class="table-title">
-          <div class="row">
-            <div class="col-sm-6">
-              <h2>Get a Classification - <b>Source</b></h2>
-            </div>
-          </div>
-        </div>
-        <table class="table table-striped table-hover">
-          <tbody>
-            {% for source in sourcelist %}
-              <tr>
-                <td>
-                  <span class="custom-checkbox">
-                    <input type="checkbox" id="{{ 'source' ~ source.source_id }}" name="options[]"
-                          value="{{ source.source_id }}">
-                    <label for="checkbox1"></label>
-                  </span>
-                </td>
-                <td> {{ source.source_name }} </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="container">
-      <div style="overflow:auto;">
-        <div style="float:right;">
-          <button class="btn btn-primary previous">Previous</button>
-          <button class="btn btn-primary next">Next</button>
-        </div>
-      </div>
-    </div> 
-  </div>
-
-  <div class="tab-pane fade" id="tabUsage">
-    <div class="container">
-      <div class="table-wrapper">
-        <div class="table-title">
-          <div class="row">
-            <div class="col-sm-6">
-              <h2>Get a Classification - <b>Usage</b></h2>
-            </div>
-          </div>
-        </div>
-        <table class="table table-striped table-hover">
-          <tbody>
-            {% for usage in usagelist %}
-              <tr>
-                <td>
-                  <span class="custom-checkbox">
-                    <input type="checkbox" id="{{ 'usage' ~ usage.usage_id }}" name="options[]"
-                          value="{{ usage.usage_id }}">
-                    <label for="checkbox1"></label>
-                  </span>
-                </td>
-                <td> {{ usage.usage_name }} </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="container">
-      <div style="overflow:auto;">
-        <div style="float:right;">
-          <button class="btn btn-primary previous">Previous</button>
-        </div>
-      </div>
-    </div> 
-  </div>
-</div>
-
 {% endblock %}
 
 {% block jscript %}
 <script type="text/javascript">
 
-  $("nav-tabContent").on("click", ".next", function () {
-    $('.nav-pills > .nav-item > .active').parent().next('li').find('a').trigger('click');
+$(document).ready(function() {
+
+  $('.next').click(function() {
+    $('.nav-tabs .active').parent().next('li').find('a').trigger('click');
   });
 
-  $('.previous').click(function () {
-    $('.nav-pills > .nav-item > .active').parent().prev('li').find('a').trigger('click');
+  $('.previous').click(function() {
+    $('.nav-tabs .active').parent().prev('li').find('a').trigger('click');
   });
+
+	$('#classform').submit(function(e){
+		e.preventDefault();
+    var domainArray = $("input:checkbox[name=domain]:checked").map(function(){return $(this).val()}).get();
+    var geoArray = $("input:checkbox[name=geography]:checked").map(function(){return $(this).val()}).get();
+    var sourceArray = $("input:checkbox[name=source]:checked").map(function(){return $(this).val()}).get();
+    var usageArray = $("input:checkbox[name=usage]:checked").map(function(){return $(this).val()}).get();
+    var dataobj = { "domain_list"    : domainArray,
+                    "geography_list" : geoArray,
+                    "source_list"    : sourceArray,
+                    "usage_list"     : usageArray,
+                    "fields_string"  : $("textarea").val()
+                  }
+
+		$.ajax({
+			url: "/classification/submit",
+			type: "POST",
+			contentType: 'application/json;charset=UTF-8',
+			data: JSON.stringify(dataobj),
+			success: function(data){
+        alert(data.found);
+				if (data.found) {
+          alert("in true")
+          window.location.href = data;
+        } else {
+          alert(data.idlist[0])
+          $('#nearestClassificationForm #classificationid') = data.idlist[0]
+          $('#nearestClassificationModal').modal('show');
+        }
+			}
+		});
+	});
+
+});
 
 </script>
 {% endblock %}
