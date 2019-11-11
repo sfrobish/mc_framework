@@ -200,28 +200,63 @@
   </div>
 </form>
 
+<!-- Classification Found Modal HTML -->
+<div id="classificationFoundModal" class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form id="classificationFoundForm">
+				<div class="modal-header">						
+          <h4 class="modal-title">Classification Found</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				</div>
+				<div class="modal-body">					
+					<div class="form-group">
+						<label>Classification ID</label>
+						<input type="text" readonly id="classificationid" name="classificationid" class="form-control" >
+					</div>
+					<div class="form-group">
+						<label>Recipe ID</label>
+						<input type="text" readonly id="recipeid" name="recipeid" class="form-control" >
+          </div>		
+          <div class="form-group">
+						<label>Label</label>
+						<input type="text" readonly id="classificationlabel" name="classificationlabel" class="form-control" >
+          </div>
+				</div>
+				<div class="modal-footer">
+					<a class="btn btn-success" href="{{ url_for('home.homepage') }}" role="button" >Accept</a> 
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
 <!-- Nearest Points Modal HTML -->
 <div id="nearestClassificationModal" class="modal fade">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<form id="nearestClassificationForm">
 				<div class="modal-header">						
-					<h4 class="modal-title">The nearest classification is below.  Accept this clasification</h4>
+          <h4 class="modal-title">The nearest classification is below.  Accept this clasification?</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 				</div>
 				<div class="modal-body">					
 					<div class="form-group">
 						<label>Classification ID</label>
-						<input type="text" readonly name="classificationid" class="form-control" >
+						<input type="text" readonly id="classificationid" name="classificationid" class="form-control" >
 					</div>
 					<div class="form-group">
 						<label>Recipe ID</label>
-						<input type="text" readonly name="recipeid" class="form-control" >
+						<input type="text" readonly id="recipeid" name="recipeid" class="form-control" >
           </div>		
           <div class="form-group">
 						<label>Label</label>
-						<input type="text" readonly name="classificationlabel" class="form-control" >
-					</div>			
+						<input type="text" readonly id="classificationlabel" name="classificationlabel" class="form-control" >
+          </div>
+          <div class="form-group">
+						<label>Identifiability Rules List</label>
+						<input type="text" readonly id="identidlist" name="identidlist" class="form-control" >
+          </div>	
 				</div>
 				<div class="modal-footer">
 					<input type="button" class="btn btn-danger" data-dismiss="modal" value="Reject">
@@ -265,14 +300,57 @@ $(document).ready(function() {
 			contentType: 'application/json;charset=UTF-8',
 			data: JSON.stringify(dataobj),
 			success: function(data){
-        alert(data.found);
 				if (data.found) {
-          alert("in true")
-          window.location.href = data;
+          var myClassId = data.classid;
+          $('.modal-body #classificationid').val(myClassId);
+          var myRecipeId = data.recipeid;
+          $('.modal-body #recipeid').val(myRecipeId);
+          var myLabel = data.label;
+          $('.modal-body #classificationlabel').val(myLabel);
+          var myIdentList = data.identlist
+          $('.modal-body #identidlist').val(myIdentList);
+          var myRedirect = data.redirect
+          $('.modal-body #redirect').val(myRedirect);
+          $('#classificationFoundModal').modal('show');
         } else {
-          alert(data.idlist[0])
-          $('#nearestClassificationForm #classificationid') = data.idlist[0]
+          var myClassId = data.classid;
+          $('.modal-body #classificationid').val(myClassId);
+          var myRecipeId = data.recipeid;
+          $('.modal-body #recipeid').val(myRecipeId);
+          var myLabel = data.label;
+          $('.modal-body #classificationlabel').val(myLabel);
+          var myIdentList = data.identlist
+          $('.modal-body #identidlist').val(myIdentList);
           $('#nearestClassificationModal').modal('show');
+        }
+			}
+		});
+	});
+
+  $('#nearestClassificationForm').submit(function(e){
+		e.preventDefault();
+    var domainArray = $("input:checkbox[name=domain]:checked").map(function(){return $(this).val()}).get();
+    var geoArray = $("input:checkbox[name=geography]:checked").map(function(){return $(this).val()}).get();
+    var sourceArray = $("input:checkbox[name=source]:checked").map(function(){return $(this).val()}).get();
+    var usageArray = $("input:checkbox[name=usage]:checked").map(function(){return $(this).val()}).get();
+    var nearestClassId = $("#classificationid").val();
+    var identlist = $("#identidlist").val().split(",");
+    var dataobj = { "domain_list"    : domainArray,
+                    "geography_list" : geoArray,
+                    "source_list"    : sourceArray,
+                    "usage_list"     : usageArray,
+                    "ident_list"     : identlist,
+                    "near_class_id"  : nearestClassId
+                  }
+    $.ajax({
+			url: "/classification/add",
+			type: "POST",
+			contentType: 'application/json;charset=UTF-8',
+			data: JSON.stringify(dataobj),
+			success: function(data){
+        if (data.redirect) {
+          $('#nearestClassificationModal').modal('hide');
+          window.location.href = data.redirect;
         }
 			}
 		});

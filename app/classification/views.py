@@ -88,7 +88,6 @@ def compare_submission(domainlist, geolist, sourcelist, usagelist, identruleslis
   identscorelist = [ x[1] for x in identruleslist ]
   identscorelist.sort()
 
-  print(domainscorelist)
   classdict = { "domain"          : domainscorelist[-1],
                 "geography"       : geoscorelist[-1],
                 "source"          : sourcescorelist[-1],
@@ -97,9 +96,8 @@ def compare_submission(domainlist, geolist, sourcelist, usagelist, identruleslis
               }
 
   print(json.dumps(classdict, indent=4))
-
   # Start simple with highest score of in the list used as coordinate
-  subnpar = numpy.array([domainscorelist[-1],geoscorelist[-1],sourcescorelist[-1],usagescorelist[-1],identscorelist[-1]])
+  subnpar = numpy.array([domainscorelist[-1],sourcescorelist[-1],geoscorelist[-1],usagescorelist[-1],identscorelist[-1]])
 
   allclass = classificationdbo.query.all()
   froblist = []
@@ -115,6 +113,7 @@ def compare_submission(domainlist, geolist, sourcelist, usagelist, identruleslis
     kidrlist = c.identifiability_rule_list
     kidrlist.sort()
     knownnpar = numpy.array([kdomlist[-1],ksrclist[-1],kgeolist[-1],kuselist[-1],kidrlist[-1]])
+    print(knownnpar)
     froblist.append( ( c.classification_id , numpy.linalg.norm(subnpar-knownnpar) ) )
 
   froblist.sort(key=lambda x: x[1])
@@ -184,34 +183,59 @@ def submit_classification():
 
   froblist = compare_submission(domainlist, geolist, sourcelist, usagelist, identruleslist)
   
-  if froblist[0][1] == 0:
-    retdict = { "found" : True,
-                "idlist": [froblist[0][0]]
-              }
+  print(json.dumps(froblist, indent=4))
+  foundclass = froblist[0][1] == 0
+  classdata = classificationdbo.query.get_or_404(froblist[0][0])
+  retdict = { "found" : str(foundclass),
+              "classid": classdata.classification_id,
+              "recipeid": classdata.recipe_id,
+              "label": classdata.label,
+              "identlist" : [ str(x[0]) + "|" +str(x[1]) for x in identruleslist ]
+            }
+
     
-    return jsonify(retdict)
-  else:
-
-    retdict = { "found" : False,
-                "idlist": froblist[:3]
-              }
-    print(jsonify(retdict))
-    return jsonify(retdict)
+  return jsonify(retdict)
 
 
-  return redirect(url_for('home.homepage'))
+@classification.route('/classification/add', methods=['GET', 'POST'])
+def add_classification():
+  
+  submitobj = request.get_json()
+
+  print(json.dumps(submitobj, indent=4))
+
+  domainlist = submitobj["domain_list"]
+  domainscorelist = [ int(i.split("|")[1]) for i in domainlist ]
+  domainscorelist.sort()
+  geolist = submitobj["geography_list"]
+  geoscorelist = [ int(i.split("|")[1]) for i in geolist ]
+  geoscorelist.sort()
+  sourcelist = submitobj["source_list"]
+  sourcescorelist = [ int(i.split("|")[1]) for i in sourcelist ]
+  sourcescorelist.sort()
+  usagelist = submitobj["usage_list"]
+  usagescorelist = [ int(i.split("|")[1]) for i in usagelist ]
+  usagescorelist.sort()
+  identruleslist = submitobj["ident_list"]
+  identrulesscorelist = [ int(i.split("|")[1]) for i in identruleslist ]
+  identrulesscorelist.sort()
+
+  classid = submitobj["near_class_id"]
+  classrow = classificationdbo.query.get_or_404(classid)
+
+
   newclass = classificationdbo(
-                                domain_list=domainlist,
-                                source_list=sourcelist,
-                                geography_list=geolist,
-                                usage_list=usagelist,
-                                identifiability_rule_list=identruleslist,
+                                domain_list=domainscorelist,
+                                source_list=sourcescorelist,
+                                geography_list=geoscorelist,
+                                usage_list=usagescorelist,
+                                identifiability_rule_list=identrulesscorelist,
                                 rights_list=[],
                                 contract_list=[],
-                                recipe_id=-1,
-                                label=""
+                                recipe_id=classrow.recipe_id,
+                                label=classrow.label
                               )
-
+  
   try:
     # add classification to the database
     db.session.add(newclass)
@@ -220,15 +244,5 @@ def submit_classification():
   except:
     # in case classification already exists
     flash('Error: classification already exists.')
-  
-  # redirect to classifications page
-  return redirect(url_for('home.homepage'))
 
-@classification.route('/classification/found', methods=['GET', 'POST'])
-def found_classification():
-  return render_template('classification/classification_found_template.html')
-
-@classification.route('/classification/notfound', methods=['GET', 'POST'])
-def not_found_classification(froblist):
-  print(froblist)
-  return render_template('classification/classification_not_found_template.html')
+  return url_for("home.homepage")
