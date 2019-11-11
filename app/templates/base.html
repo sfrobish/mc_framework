@@ -50,6 +50,14 @@
                         <a class="dropdown-item" href="{{ url_for('contract.list_contracts') }}">Contract</a>
                     </div>
                 </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Edit Identifiable Fields</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ url_for('sdf_dim.list_sensitive_fields') }}">Sensitive Data Fields</a>
+                        <a class="dropdown-item" href="{{ url_for('ident_dim.list_ident_rules') }}">Identifiability Rules</a>
+                    </div>
+                </li>
                 </ul>
             </div>
         </nav>

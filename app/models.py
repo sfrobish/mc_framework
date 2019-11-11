@@ -135,6 +135,60 @@ class contract_dim(basemodel):
     self.similarity_score = kwargs.get("similarity_score")
 
 
+class sdf_dim(basemodel):
+  __tablename__ = "sensitive_data_fields"
+  sdf_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
+  sdf_name = db.Column(db.String(60), unique=True, nullable=False)
+  sdf_descr = db.Column(db.String(200), unique=False, nullable=False)
+  sdf_regex = db.Column(db.String(200), unique=False, nullable=False)
+  risk_score = db.Column(db.Integer, unique=False, nullable=False)
+
+  def __init__(self, **kwargs):
+    self.sdf_id = kwargs.get("sdf_id")
+    self.sdf_name = kwargs.get("sdf_name")
+    self.sdf_descr = kwargs.get("sdf_descr")
+    self.sdf_regex = kwargs.get("sdf_regex")
+    self.risk_score = kwargs.get("risk_score")
+
+
+class ident_dim(basemodel):
+  __tablename__ = "identifiability_rules"
+  rule_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
+  risk_type = db.Column(db.String(20), unique=False, nullable=False)
+  risk_score = db.Column(db.Integer, unique=False, nullable=False)
+  field_id_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False)
+
+  def __init__(self, **kwargs):
+    self.rule_id = kwargs.get("rule_id")
+    self.risk_type = kwargs.get("risk_type")
+    self.risk_score = kwargs.get("risk_score")
+    self.field_list = kwargs.get("field_list")
+
+
+class submitted_forms(basemodel):
+  __tablename__ = "submitted_forms"
+  submission_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
+  domain_id_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  source_id_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  geography_id_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  usage_id_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  rights_id_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  contract_id_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  identifiability_rule_id_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  #submitted_timestamp = db.Column(db.TIMESTAMP, unique=False, nullable=False, primary_key=False)
+
+  def __init__(self, **kwargs):
+    self.classification_id = kwargs.get("classification_id")
+    self.domain_id_list = kwargs.get("domain_id_list")
+    self.source_id_list = kwargs.get("source_id_list")
+    self.geography_id_list = kwargs.get("geography_id_list")
+    self.usage_id_list = kwargs.get("usage_id_list")
+    self.rights_id_list = kwargs.get("rights_id_list")
+    self.contract_id_list = kwargs.get("contract_id_list")
+    self.identifiability_rule_id_list = kwargs.get("identifiability_rule_id_list")
+    #self.submitted_timestamp = kwargs.get("submitted_timestamp")
+
+
 class classification(basemodel):
   __tablename__ = "classification"
   classification_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True)
@@ -144,7 +198,7 @@ class classification(basemodel):
   usage_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
   rights_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
   contract_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
-  sensitive_field_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  identifiability_rule_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
   recipe_id = db.Column(db.Integer, unique=False, nullable=False, primary_key=False)
   label = db.Column(db.String(60), unique=False, nullable=False, primary_key=False)
 
@@ -156,6 +210,6 @@ class classification(basemodel):
     self.usage_list = kwargs.get("usage_list")
     self.rights_list = kwargs.get("rights_list")
     self.contract_list = kwargs.get("contract_list")
-    self.sensitive_field_list = kwargs.get("sensitive_field_list")
+    self.identifiability_rule_list = kwargs.get("identifiability_rule_list")
     self.recipe_id = kwargs.get("recipe_id")
     self.label = kwargs.get("label")

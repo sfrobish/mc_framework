@@ -4,8 +4,6 @@ from wtforms.validators import DataRequired
 
 
 class ClassificationForm(FlaskForm):
-
-  # Form for admin to add or edit a department
   
   domain_list = FieldList(IntegerField("domain"))
   source_list = FieldList(IntegerField("source"))
@@ -13,7 +11,7 @@ class ClassificationForm(FlaskForm):
   usage_list = FieldList(IntegerField("usage"))
   rights_list = FieldList(IntegerField("rights"))
   contract_list = FieldList(IntegerField("contract"))
-  sensitive_fields_list = FieldList(IntegerField("sensitive_field"))
+  fields_string = StringField("sensitive_fields_list")
   recipe_id = IntegerField("recipe_id")
   label = StringField("label", validators=[DataRequired(message="Classification Label is required")])
   submit = SubmitField('Submit')
