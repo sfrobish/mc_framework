@@ -28,6 +28,10 @@ def create_app(config_name):
   migrate = Migrate(app, db)
   from app import models
 
+  # blueprint for auth routes in our app
+  from .auth import auth as auth_blueprint
+  app.register_blueprint(auth_blueprint)
+
   from .home import home as home_blueprint
   app.register_blueprint(home_blueprint)
 
