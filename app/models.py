@@ -162,7 +162,7 @@ class ident_dim(basemodel):
     self.rule_id = kwargs.get("rule_id")
     self.risk_type = kwargs.get("risk_type")
     self.risk_score = kwargs.get("risk_score")
-    self.field_list = kwargs.get("field_list")
+    self.field_id_list = kwargs.get("field_id_list")
 
 
 class submitted_forms(basemodel):
@@ -200,7 +200,7 @@ class classification(basemodel):
   contract_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
   identifiability_rule_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
   recipe_id = db.Column(db.Integer, unique=False, nullable=False, primary_key=False)
-  label = db.Column(db.String(60), unique=False, nullable=False, primary_key=False)
+  label = db.Column(db.String(1000), unique=False, nullable=False, primary_key=False)
 
   def __init__(self, **kwargs):
     self.classification_id = kwargs.get("classification_id")

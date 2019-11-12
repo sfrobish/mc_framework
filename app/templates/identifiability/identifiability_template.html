@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% block title %}SIdentifiabilit Rules Dimension{% endblock %}
+{% block title %}Identifiability Rules Dimension{% endblock %}
 {% block body %}
 <div class="container">
 	<div class="table-wrapper">
 		<div class="table-title">
 			<div class="row">
 				<div class="col-sm-6">
-					<h2>Manage <b>Sensitive Fields</b></h2>
+					<h2>Manage <b>Identifiability Rules</b></h2>
 				</div>
 				<div class="col-sm-6">
 					<a href="#addIdentRuleModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add</span></a>
@@ -43,7 +43,7 @@
 						<td> {{ ident_dim.risk_type }} </td>
 						<td> {{ ident_dim.risk_score }} </td>
 						<td>
-							<a href="#editSDFModal" class="edit" data-toggle="modal" data-id="{{ ident_dim.rule_id }}" data-fieldlist="{{ ident_dim.field_list }}" data-risktype="{{ ident_dim.risk_type }}" data-score="{{ ident_dim.risk_score }}">
+							<a href="#editSDFModal" class="edit" data-toggle="modal" data-id="{{ ident_dim.rule_id }}" data-fieldlist="{{ ident_dim.field_id_list }}" data-risktype="{{ ident_dim.risk_type }}" data-score="{{ ident_dim.risk_score }}">
 								<i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
 							</a>
 						</td>
@@ -74,7 +74,11 @@
 				<div class="modal-body">					
 					<div class="form-group">
 						<label>Field List</label>
-						<input type="text" name="field_list" class="form-control" required>
+						<select id="sdfpicker" name="sdfpicker[]" class="selectpicker" multiple>
+							{% for sdf in sdf_dims %}
+								<option value="{{ sdf.sdf_id }}">{{ sdf.sdf_name }}</option>
+							{% endfor %}
+						</select>
 					</div>
 					<div class="form-group">
 						<label>Risk Type</label>
@@ -106,7 +110,11 @@
 					<input type="hidden" id="rule_id">
 					<div class="form-group">
 						<label>Field List</label>
-						<input type="text" class="form-control" name="field_list" id="field_list" required>
+						<select id="sdfpicker" name="sdfpicker[]" class="selectpicker" multiple>
+							{% for sdf in sdf_dims %}
+								<option value="{{ sdf.sdf_id }}">{{ sdf.sdf_name }}</option>
+							{% endfor %}
+						</select>
 					</div>
 					<div class="form-group">
 						<label>Risk Type</label>
@@ -165,6 +173,7 @@
 
 {% block jscript %}
 <script type="text/javascript">
+$.fn.selectpicker.Constructor.BootstrapVersion = '4';
 $(document).ready(function(){
 	// Activate tooltip
 	$('[data-toggle="tooltip"]').tooltip();
@@ -191,7 +200,7 @@ $(document).on("click", ".edit", function () {
 		var myIdentId = $(this).data('id');
 		$(".modal-body #rule_id").val( myIdentId );
 		var myIdentFieldList = $(this).data('fieldlist');
-		$(".modal-body #field_list").val( myIdentFieldList );
+        $('.selectpicker').selectpicker('val', myIdentFieldList)
 		var myIdentRiskType = $(this).data('risktype');
 		$(".modal-body #risk_type").val( myIdentRiskType );
 		var myIdentScore = $(this).data('score');
@@ -201,7 +210,7 @@ $(document).on("click", ".delete", function () {
 		var myIdentId = $(this).data('id');
 		$(".modal-body #rule_id").val( myIdentId );
 		var myIdentFieldList = $(this).data('fieldlist');
-		$(".modal-body #field_list").val( myIdentFieldList );
+		$('.selectpicker').selectpicker('val', myIdentFieldList)
 		var myIdentRiskType = $(this).data('risktype');
 		$(".modal-body #risk_type").val( myIdentRiskType );
 		var myIdentScore = $(this).data('score');
@@ -210,6 +219,8 @@ $(document).on("click", ".delete", function () {
 $(function(){
 	$('#addIdentRuleForm').submit(function(e){
 		e.preventDefault();
+		var mySDFList = $('.selectpicker').val();
+		alert(mySDFList)
 		$.ajax({
 			url: "/identifiability/add",
 			type: "POST",
@@ -226,6 +237,10 @@ $(function(){
 	$('#editIdentRuleForm').submit(function(e){
 		var ruleid = $('#editIdentRuleForm #rule_id').val().trim();
 		var urlAjax = "/identifiability/edit/" + ruleid;
+		var myIdentFieldList = $('.selectpicker').val();
+		alert($('#editIdentRuleForm').serializeArray().reduce(function(acc,cur) { acc[cur.name] = cur.value ; return acc }, {}));
+		var myIdentRiskType = $(this).data('risktype');
+		var myIdentScore = $(this).data('score');
 		e.preventDefault();
 		$.ajax({
 			url: urlAjax,

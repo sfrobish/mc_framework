@@ -7,13 +7,25 @@ from . import ident_dim
 from .forms import IdentifiabilityForm
 from .. import db
 from ..models import ident_dim as identdbo
+from ..models import sdf_dim as sdfdbo
   
 
 @ident_dim.route('/identifiability', methods=['GET', 'POST'])
 def list_ident_rules():
   
-  # List all ident_dims
-  identlist = identdbo.query.order_by(asc(identdbo.rule_id)).all()
+  # List all ident_dims with Sensitive field names
+  sql = "select array_agg(f.sdf_name) as field_list, i.rule_id, i.risk_score, i.risk_type \
+        from mc_demo.identifiability_rules i \
+        left join mc_demo.sensitive_data_fields f \
+        on f.sdf_id = any(i.field_id_list) \
+        group by i.rule_id"
+  result = db.engine.execute(sql)
+  print(result)
+  identlist = [row for row in result]
+  print(identlist)
+
+  # Sensitive data fields for populating the selectpicker
+  sdflist = sdfdbo.query.order_by(asc(sdfdbo.sdf_name)).all()
 
   page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
   total = len(identlist)
@@ -23,6 +35,7 @@ def list_ident_rules():
 
   return render_template('identifiability/identifiability_template.html',
                            ident_dims=pagination_idents,
+                           sdf_dims=sdflist,
                            pagination=pagination,
                            page=page,
                            per_page=per_page,
@@ -45,7 +58,7 @@ def add_ident_dim():
     print("VALID") """
   identdata = identdbo(risk_type=form.risk_type.data,
                        risk_score=form.risk_score.data,
-                       field_list=form.field_list.data)
+                       field_list=form.sdfpicker.data)
 
   try:
     # add ident_dim to the database
@@ -71,7 +84,7 @@ def edit_ident_dim(id):
   #if form.validate_on_submit():
   identdata.risk_type = form.risk_type.data
   identdata.risk_score = form.risk_score.data
-  identdata.field_list = form.field_list.data
+  identdata.field_list = form.sdfpicker.data
   
   db.session.commit()
   flash('You have successfully edited the sdf.')
