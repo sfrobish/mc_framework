@@ -24,6 +24,17 @@ class basemodel(db.Model):
             for column, value in self._to_dict().items()
     }
 
+class user(basemodel):
+  __tablename__ = "user"
+  user_id = db.Column(db.Integer, primary_key=True) 
+  user_email = db.Column(db.String(100), unique=True)
+  user_password_digest = db.Column(db.String(100))
+  user_is_admin = db.Column(db.Boolean, default=False)
+
+  def __init__(self, **kwargs):
+    self.user_email = kwargs.get("user_email")
+    self.user_password_digest = kwargs.get("user_password_digest")
+    self.user_is_admin = kwargs.get("user_is_admin")
 
 class control(basemodel):
   __tablename__ = "control"
