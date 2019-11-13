@@ -34,6 +34,16 @@ def create_app(config_name):
   def load_user(user_id):
     return user.query.get(int(user_id))
 
+  def role_required(role_name):
+    def decorator(func):
+      @wraps(func)
+      def authorize(*args, **kwargs):
+        if not current_user.has_role(role_name):
+          abort(401) # not authorized
+        return func(*args, **kwargs)
+      return authorize
+    return decorator
+
   Bootstrap(app)
   csrf.init_app(app)
   db.init_app(app)

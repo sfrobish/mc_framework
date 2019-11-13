@@ -2,15 +2,20 @@ from flask import abort, flash, redirect, render_template, url_for, request
 from flask_paginate import Pagination, get_page_args
 from sqlalchemy import asc
 import json
+from flask_login import login_required
 
 from . import source_dim
 from .forms import SourceForm
 from .. import db
 from ..models import source_dim as sourcedbo
+from ..helpers import check_admin
   
 
 @source_dim.route('/sources', methods=['GET', 'POST'])
+@login_required
 def list_source_dims():
+
+  check_admin()
   
   # List all source_dims
   sourcelist = sourcedbo.query.order_by(asc(sourcedbo.source_name)).all()
@@ -30,7 +35,11 @@ def list_source_dims():
 
 
 @source_dim.route('/sources/add', methods=['GET', 'POST'])
+@login_required
 def add_source_dim():
+
+  check_admin()
+
   # Add a source_dim to the database
 
   add_source_dim = True
@@ -61,7 +70,10 @@ def add_source_dim():
 
 
 @source_dim.route('/sources/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_source_dim(id):
+
+  check_admin()
 
   # Edit a source_dim
   add_source_dim = False
@@ -81,7 +93,10 @@ def edit_source_dim(id):
 
 
 @source_dim.route('/sources/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
 def delete_source_dim(id):
+
+  check_admin()
 
   # Delete a source_dim from the database
 

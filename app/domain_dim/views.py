@@ -2,14 +2,19 @@ from flask import abort, flash, redirect, render_template, url_for, request
 from flask_paginate import Pagination, get_page_args
 from sqlalchemy import asc
 import json
+from flask_login import login_required
 
 from . import domain
 from .forms import DomainForm
 from .. import db
 from ..models import domain_dim as domaindbo
+from ..helpers import check_admin
   
 @domain.route('/domains', methods=['GET', 'POST'])
+@login_required
 def list_domains():
+
+  check_admin()
 
   #List all domains
   domainslist = domaindbo.query.order_by(asc(domaindbo.domain_name)).all()
@@ -27,8 +32,11 @@ def list_domains():
                           title="Domains")
 
 @domain.route('/domains/add', methods=['GET', 'POST'])
+@login_required
 def add_domain():
   # Add a domain to the database
+
+  check_admin()
 
   add_domain = True
 
@@ -61,7 +69,10 @@ def add_domain():
 
 
 @domain.route('/domains/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_domain(id):
+
+  check_admin()
 
   print("made it " + str(id))
   # Edit a domain
@@ -83,7 +94,10 @@ def edit_domain(id):
 
 
 @domain.route('/domains/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
 def delete_domain(id):
+
+  check_admin()
 
   # Delete a domain from the database
   print(id)

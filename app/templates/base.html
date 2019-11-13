@@ -60,14 +60,14 @@
                     </div>
                 </li>
                 {% endif %}
-                {% if current_user.is_authenticated %}
-                <li class="nav-item">
-                    <a href="{{ url_for('auth.logout') }}" class="nav-link">
-                        Logout
-                    </a>
-                </li>
-                {% endif %}
               </ul>
+              {% if current_user.is_authenticated %}
+              <span class="navbar-text">
+                  <a href="{{ url_for('auth.logout') }}" class="nav-link">
+                      Logout
+                  </a>
+              </span>
+              {% endif %}
             </div>
         </nav>
     </div>

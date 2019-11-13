@@ -2,15 +2,20 @@ from flask import abort, flash, redirect, render_template, url_for, request
 from flask_paginate import Pagination, get_page_args
 from sqlalchemy import asc
 import json
+from flask_login import login_required
 
 from . import usage
 from .forms import UsageForm
 from .. import db
 from ..models import usage_dim as usagedbo
+from ..helpers import check_admin
   
 
 @usage.route('/usages', methods=['GET', 'POST'])
+@login_required
 def list_usage():
+
+  check_admin()
   
   # List all usages
   usagelist = usagedbo.query.order_by(asc(usagedbo.usage_name)).all()
@@ -30,7 +35,11 @@ def list_usage():
 
 
 @usage.route('/usages/add', methods=['GET', 'POST'])
+@login_required
 def add_usage():
+
+  check_admin()
+
   # Add a usage to the database
 
   add_usage = True
@@ -61,7 +70,10 @@ def add_usage():
 
 
 @usage.route('/usages/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_usage(id):
+
+  check_admin()
 
   # Edit a usage
   add_usage = False
@@ -81,7 +93,10 @@ def edit_usage(id):
 
 
 @usage.route('/usages/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
 def delete_usage(id):
+
+  check_admin()
 
   # Delete a usage from the database
 
