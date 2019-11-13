@@ -10,14 +10,14 @@ from .. import db
 from ..models import recipe as recipedbo
 from ..models import control as controldbo
 from ..models import control_recipe as controlrecipedbo
-from ..helpers import check_admin
+from ..helpers import confirm_user_is_admin
   
 
 @recipe.route('/recipes', methods=['GET', 'POST'])
 @login_required
 def list_recipes():
 
-  check_admin()
+  confirm_user_is_admin()
   
   # List all recipes
   recipeslist = recipedbo.query.order_by(asc(recipedbo.recipe_name)).all()
@@ -39,7 +39,7 @@ def list_recipes():
 @login_required
 def add_recipe():
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Add a recipe to the database
 
@@ -71,7 +71,7 @@ def add_recipe():
 @login_required
 def edit_recipe(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Edit a department
   add_recipe = False
@@ -92,7 +92,7 @@ def edit_recipe(id):
 @login_required
 def delete_recipe(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Delete a department from the database
 

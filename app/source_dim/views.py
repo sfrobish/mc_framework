@@ -8,14 +8,14 @@ from . import source_dim
 from .forms import SourceForm
 from .. import db
 from ..models import source_dim as sourcedbo
-from ..helpers import check_admin
+from ..helpers import confirm_user_is_admin
   
 
 @source_dim.route('/sources', methods=['GET', 'POST'])
 @login_required
 def list_source_dims():
 
-  check_admin()
+  confirm_user_is_admin()
   
   # List all source_dims
   sourcelist = sourcedbo.query.order_by(asc(sourcedbo.source_name)).all()
@@ -38,7 +38,7 @@ def list_source_dims():
 @login_required
 def add_source_dim():
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Add a source_dim to the database
 
@@ -73,7 +73,7 @@ def add_source_dim():
 @login_required
 def edit_source_dim(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Edit a source_dim
   add_source_dim = False
@@ -96,7 +96,7 @@ def edit_source_dim(id):
 @login_required
 def delete_source_dim(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Delete a source_dim from the database
 

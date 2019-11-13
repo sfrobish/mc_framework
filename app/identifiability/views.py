@@ -8,14 +8,14 @@ from . import ident_dim
 from .forms import IdentifiabilityForm
 from .. import db
 from ..models import ident_dim as identdbo
-from ..helpers import check_admin
+from ..helpers import confirm_user_is_admin
   
 
 @ident_dim.route('/identifiability', methods=['GET', 'POST'])
 @login_required
 def list_ident_rules():
 
-  check_admin()
+  confirm_user_is_admin()
   
   # List all ident_dims
   identlist = identdbo.query.order_by(asc(identdbo.rule_id)).all()
@@ -38,7 +38,7 @@ def list_ident_rules():
 @login_required
 def add_ident_dim():
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Add a ident_dim to the database
 
@@ -73,7 +73,7 @@ def add_ident_dim():
 @login_required
 def edit_ident_dim(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Edit a ident_dim
   add_ident_dim = False
@@ -96,7 +96,7 @@ def edit_ident_dim(id):
 @login_required
 def delete_ident_dim(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Delete a ident_dim from the database
 

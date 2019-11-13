@@ -8,13 +8,13 @@ from . import domain
 from .forms import DomainForm
 from .. import db
 from ..models import domain_dim as domaindbo
-from ..helpers import check_admin
+from ..helpers import confirm_user_is_admin
   
 @domain.route('/domains', methods=['GET', 'POST'])
 @login_required
 def list_domains():
 
-  check_admin()
+  confirm_user_is_admin()
 
   #List all domains
   domainslist = domaindbo.query.order_by(asc(domaindbo.domain_name)).all()
@@ -36,7 +36,7 @@ def list_domains():
 def add_domain():
   # Add a domain to the database
 
-  check_admin()
+  confirm_user_is_admin()
 
   add_domain = True
 
@@ -72,7 +72,7 @@ def add_domain():
 @login_required
 def edit_domain(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   print("made it " + str(id))
   # Edit a domain
@@ -97,7 +97,7 @@ def edit_domain(id):
 @login_required
 def delete_domain(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Delete a domain from the database
   print(id)

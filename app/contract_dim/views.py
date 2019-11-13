@@ -8,14 +8,14 @@ from . import contract
 from .forms import ContractForm
 from .. import db
 from ..models import contract_dim as contractdbo
-from ..helpers import check_admin
+from ..helpers import confirm_user_is_admin
   
 
 @contract.route('/contracts', methods=['GET', 'POST'])
 @login_required
 def list_contracts():
 
-  check_admin()
+  confirm_user_is_admin()
   
   # List all contracts
   contractslist = contractdbo.query.order_by(asc(contractdbo.contract_name)).all()
@@ -39,7 +39,7 @@ def list_contracts():
 def add_contract():
   # Add a contract to the database
 
-  check_admin()
+  confirm_user_is_admin()
 
   add_contract = True
 
@@ -72,7 +72,7 @@ def add_contract():
 @login_required
 def edit_contract(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Edit a contract
   add_contract = False
@@ -93,7 +93,7 @@ def edit_contract(id):
 @login_required
 def delete_contract(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Delete a contract from the database
 

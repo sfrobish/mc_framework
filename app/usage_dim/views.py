@@ -8,14 +8,14 @@ from . import usage
 from .forms import UsageForm
 from .. import db
 from ..models import usage_dim as usagedbo
-from ..helpers import check_admin
+from ..helpers import confirm_user_is_admin
   
 
 @usage.route('/usages', methods=['GET', 'POST'])
 @login_required
 def list_usage():
 
-  check_admin()
+  confirm_user_is_admin()
   
   # List all usages
   usagelist = usagedbo.query.order_by(asc(usagedbo.usage_name)).all()
@@ -38,7 +38,7 @@ def list_usage():
 @login_required
 def add_usage():
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Add a usage to the database
 
@@ -73,7 +73,7 @@ def add_usage():
 @login_required
 def edit_usage(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Edit a usage
   add_usage = False
@@ -96,7 +96,7 @@ def edit_usage(id):
 @login_required
 def delete_usage(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Delete a usage from the database
 

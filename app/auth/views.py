@@ -13,19 +13,19 @@ def login():
 def login_post():
   email = request.form.get('email')
   password = request.form.get('password')
-  # remember = True if request.form.get('remember') else False
 
+  # check if user actually exists
   found_user = user.query.filter_by(user_email=email).first()
   
-  # check if user actually exists
+  # NOTE: Current version does not hash password. In an actual implementation,
   # take the user supplied password, hash it, and compare it to the hashed password in database
-  # if not user or not check_password_hash(user.password, password): 
   if not found_user or not found_user.user_password_digest == password: 
     flash('Please check your login details and try again.')
     return redirect(url_for('auth.login')) # if user doesn't exist or password is wrong, reload the page
 
   # if the above check passes, then we know the user has the right credentials
   login_user(found_user)
+
   return redirect(url_for('home.homepage'))
 
 @auth.route('/logout')

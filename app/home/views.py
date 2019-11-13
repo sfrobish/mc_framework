@@ -4,11 +4,12 @@ from flask_login import login_required, current_user
 from . import home
 
 @home.route('/', methods=['GET', 'POST'])
-@login_required
 def homepage():
-  
-  # Render the homepage template on the / route
-  return render_template('home/index.html', current_user=current_user, title="Welcome")
+  if current_user.is_authenticated:
+    # Render the homepage template on the / route
+    return render_template('home/index.html', current_user=current_user, title="Welcome")
+  else:
+    return redirect(url_for('auth.login'))
 
 
 @home.route('/control/dashboard')

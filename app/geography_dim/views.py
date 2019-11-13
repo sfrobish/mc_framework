@@ -8,14 +8,14 @@ from . import geography
 from .forms import GeographyForm
 from .. import db
 from ..models import geography_dim as geographydbo
-from ..helpers import check_admin
+from ..helpers import confirm_user_is_admin
   
 
 @geography.route('/geography', methods=['GET', 'POST'])
 @login_required
 def list_geography():
 
-  check_admin()
+  confirm_user_is_admin()
   
   # List all geography
   geographylist = geographydbo.query.order_by(asc(geographydbo.geo_name)).all()
@@ -38,7 +38,7 @@ def list_geography():
 @login_required
 def add_geography():
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Add a geography to the database
 
@@ -76,7 +76,7 @@ def add_geography():
 @login_required
 def edit_geography(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   print("made it " + str(id))
   # Edit a geography
@@ -101,7 +101,7 @@ def edit_geography(id):
 @login_required
 def delete_geography(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Delete a geography from the database
   print(id)

@@ -8,14 +8,14 @@ from .. import db
 from ..models import control as controldbo
 from ..models import recipe as recipedbo
 from ..models import control_recipe as controlrecipedbo
-from ..helpers import check_admin
+from ..helpers import confirm_user_is_admin
 
 
 @control_recipe.route('/control_recipes', methods=['GET', 'POST'])
 @login_required
 def list_control_recipes():
   
-  check_admin()
+  confirm_user_is_admin()
   
   # List all recipes
   sql = text("select cr.control_recipe_id, c.control_id, c.control_name, " +
@@ -35,7 +35,7 @@ def list_control_recipes():
 @login_required
 def add_control_recipe(rid, cid):
   
-  check_admin()
+  confirm_user_is_admin()
   
   # Add a control recipe to the database
   
@@ -73,7 +73,7 @@ def add_control_recipe(rid, cid):
 @login_required
 def edit_control_recipe(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Edit a control recipe
   add_control_recipe = False
@@ -103,7 +103,7 @@ def edit_control_recipe(id):
 @login_required
 def delete_control_recipe(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Delete a control recipe from the database
 

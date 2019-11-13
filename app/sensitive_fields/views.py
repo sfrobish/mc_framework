@@ -8,14 +8,14 @@ from . import sdf_dim
 from .forms import SensitiveFieldsForm
 from .. import db
 from ..models import sdf_dim as sdfdbo
-from ..helpers import check_admin
+from ..helpers import confirm_user_is_admin
   
 
 @sdf_dim.route('/sensitive-fields', methods=['GET', 'POST'])
 @login_required
 def list_sensitive_fields():
 
-  check_admin()
+  confirm_user_is_admin()
   
   # List all sdf_dims
   sdflist = sdfdbo.query.order_by(asc(sdfdbo.sdf_name)).all()
@@ -38,7 +38,7 @@ def list_sensitive_fields():
 @login_required
 def add_sdf_dim():
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Add a sdf_dim to the database
 
@@ -73,7 +73,7 @@ def add_sdf_dim():
 @login_required
 def edit_sdf_dim(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Edit a sdf_dim
   add_sdf_dim = False
@@ -98,7 +98,7 @@ def edit_sdf_dim(id):
 @login_required
 def delete_sdf_dim(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Delete a sdf_dim from the database
 

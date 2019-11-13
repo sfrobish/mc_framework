@@ -8,13 +8,13 @@ from . import control
 from .forms import ControlForm
 from .. import db
 from ..models import control as controldbo
-from ..helpers import check_admin
+from ..helpers import confirm_user_is_admin
 
 @control.route('/controls', methods=['GET', 'POST'])
 @login_required
 def list_controls():
   
-  check_admin()
+  confirm_user_is_admin()
   
   # List all controls
   controlslist = controldbo.query.order_by(asc(controldbo.control_name)).all()
@@ -38,7 +38,7 @@ def list_controls():
 def add_control():
   # Add a control to the database
 
-  check_admin()
+  confirm_user_is_admin()
 
   add_control = True
 
@@ -69,7 +69,7 @@ def add_control():
 @login_required
 def edit_control(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Edit a control
   add_control = False
@@ -96,7 +96,7 @@ def edit_control(id):
 @login_required
 def delete_control(id):
 
-  check_admin()
+  confirm_user_is_admin()
 
   # Delete a control from the database
 
