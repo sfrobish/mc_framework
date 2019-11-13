@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% block title %}SIdentifiabilit Rules Dimension{% endblock %}
+{% block title %}Identifiability Rules Dimension{% endblock %}
 {% block body %}
 <div class="container">
 	<div class="table-wrapper">
 		<div class="table-title">
 			<div class="row">
 				<div class="col-sm-6">
-					<h2>Manage <b>Sensitive Fields</b></h2>
+					<h2>Manage <b>Identifiability Rules</b></h2>
 				</div>
 				<div class="col-sm-6">
 					<a href="#addIdentRuleModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add</span></a>
@@ -43,12 +43,12 @@
 						<td> {{ ident_dim.risk_type }} </td>
 						<td> {{ ident_dim.risk_score }} </td>
 						<td>
-							<a href="#editSDFModal" class="edit" data-toggle="modal" data-id="{{ ident_dim.rule_id }}" data-fieldlist="{{ ident_dim.field_list }}" data-risktype="{{ ident_dim.risk_type }}" data-score="{{ ident_dim.risk_score }}">
+							<a href="#editSDFModal" class="edit" data-toggle="modal" data-id="{{ ident_dim.rule_id }}" data-fieldlist="{{ ident_dim.field_list }}" data-fieldidlist="{{ ident_dim.field_id_list }}" data-risktype="{{ ident_dim.risk_type }}" data-score="{{ ident_dim.risk_score }}">
 								<i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
 							</a>
 						</td>
 						<td>
-							<a href="#deleteIdentRuleModalOne" class="delete" data-toggle="modal" data-id="{{ ident_dim.rule_id }}" data-fieldlist="{{ ident_dim.field_list }}" data-risktype="{{ ident_dim.risk_type }}" data-score="{{ ident_dim.risk_score }}">
+							<a href="#deleteIdentRuleModalOne" class="delete" data-toggle="modal" data-id="{{ ident_dim.rule_id }}" data-fieldlist="{{ ident_dim.field_list }}" data-fieldidlist="{{ ident_dim.field_id_list }}" data-risktype="{{ ident_dim.risk_type }}" data-score="{{ ident_dim.risk_score }}">
 								<i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
 							</a>
 						</td>
@@ -74,15 +74,19 @@
 				<div class="modal-body">					
 					<div class="form-group">
 						<label>Field List</label>
-						<input type="text" name="field_list" class="form-control" required>
+						<select id="sdfpicker" name="sdfpicker[]" class="selectpicker" multiple>
+							{% for sdf in sdf_dims %}
+								<option value="{{ sdf.sdf_id }}">{{ sdf.sdf_name }}</option>
+							{% endfor %}
+						</select>
 					</div>
 					<div class="form-group">
 						<label>Risk Type</label>
-						<input type="text" name="risk_type" class="form-control" required>
+						<input type="text" id="risk_type" name="risk_type" class="form-control" required>
 					</div>		
 					<div class="form-group">
 						<label>Risk Score</label>
-						<input type="number" name="risk_score" class="form-control" required>
+						<input type="number" id="risk_score" name="risk_score" class="form-control" required>
 					</div>			
 				</div>
 				<div class="modal-footer">
@@ -106,7 +110,11 @@
 					<input type="hidden" id="rule_id">
 					<div class="form-group">
 						<label>Field List</label>
-						<input type="text" class="form-control" name="field_list" id="field_list" required>
+						<select id="sdfpicker" name="sdfpicker[]" class="selectpicker" multiple>
+							{% for sdf in sdf_dims %}
+								<option value="{{ sdf.sdf_id }}">{{ sdf.sdf_name }}</option>
+							{% endfor %}
+						</select>
 					</div>
 					<div class="form-group">
 						<label>Risk Type</label>
@@ -136,21 +144,23 @@
 				</div>
 				<div class="modal-body">					
 					<p>Are you sure you want to delete this Record?</p>
-					<div class="form-group row">
-						<input type="hidden" readonly id="rule_id">
-						<label for="field_list" class="col-sm-2 col-form-label">Field List</label>
-						<div class="col-sm-10 ml-1">
-							<input type="text" readonly class="form-control-plaintext" id="field_list">
-						</div>
-						<label for="risk_type" class="col-sm-2 col-form-label">Risk Type</label>
-						<div class="col-sm-10 ml-1">
-							<input type="text" readonly class="form-control-plaintext" id="risk_type">
-						</div>
-						<label for="risk_score" class="col-sm-2 col-form-label">Risk Score</label>
-						<div class="col-sm-10 ml-1">
-							<input type="text" readonly class="form-control-plaintext" id="risk_score">
-						</div>
+					<input type="hidden" id="rule_id">
+					<div class="form-group">
+						<label>Field List</label>
+						<select id="sdfpicker" name="sdfpicker[]" class="selectpicker" multiple>
+							{% for sdf in sdf_dims %}
+								<option value="{{ sdf.sdf_id }}">{{ sdf.sdf_name }}</option>
+							{% endfor %}
+						</select>
 					</div>
+					<div class="form-group">
+						<label>Risk Type</label>
+						<input type="text" class="form-control" name="risk_type" id="risk_type" required>
+					</div>
+					<div class="form-group">
+						<label>Risk Score</label>
+						<input type="number" class="form-control" name="risk_score" id="risk_score" required>
+					</div>	
 					<p class="text-warning"><small>This action cannot be undone.</small></p>
 				</div>
 				<div class="modal-footer">
@@ -165,6 +175,7 @@
 
 {% block jscript %}
 <script type="text/javascript">
+$.fn.selectpicker.Constructor.BootstrapVersion = '4';
 $(document).ready(function(){
 	// Activate tooltip
 	$('[data-toggle="tooltip"]').tooltip();
@@ -190,8 +201,8 @@ $(document).ready(function(){
 $(document).on("click", ".edit", function () {
 		var myIdentId = $(this).data('id');
 		$(".modal-body #rule_id").val( myIdentId );
-		var myIdentFieldList = $(this).data('fieldlist');
-		$(".modal-body #field_list").val( myIdentFieldList );
+		var myIdentFieldString = $(this).data('fieldidlist');
+        $('.selectpicker').selectpicker('val', myIdentFieldString);
 		var myIdentRiskType = $(this).data('risktype');
 		$(".modal-body #risk_type").val( myIdentRiskType );
 		var myIdentScore = $(this).data('score');
@@ -200,8 +211,8 @@ $(document).on("click", ".edit", function () {
 $(document).on("click", ".delete", function () {
 		var myIdentId = $(this).data('id');
 		$(".modal-body #rule_id").val( myIdentId );
-		var myIdentFieldList = $(this).data('fieldlist');
-		$(".modal-body #field_list").val( myIdentFieldList );
+		var myIdentFieldList = $(this).data('fieldidlist');
+		$('.selectpicker').selectpicker('val', myIdentFieldList);
 		var myIdentRiskType = $(this).data('risktype');
 		$(".modal-body #risk_type").val( myIdentRiskType );
 		var myIdentScore = $(this).data('score');
@@ -210,11 +221,18 @@ $(document).on("click", ".delete", function () {
 $(function(){
 	$('#addIdentRuleForm').submit(function(e){
 		e.preventDefault();
+		var mySDFList = $('.selectpicker').val();
+		var myRiskType = $('#risk_type').val();
+		var myRiskScore = $('#risk_score').val();
 		$.ajax({
 			url: "/identifiability/add",
 			type: "POST",
 			contentType: 'application/json;charset=UTF-8',
-			data: JSON.stringify($('#addIdentRuleForm').serializeArray().reduce(function(acc,cur) { acc[cur.name] = cur.value ; return acc }, {})),
+			data: JSON.stringify({
+					"sdflist": mySDFList,
+			        "risk_type": myRiskType,
+					"risk_score": myRiskScore
+				  }),
 			success: function(data){
 				$('#addIdentRuleForm').modal('hide');
 				location.reload();
@@ -226,12 +244,19 @@ $(function(){
 	$('#editIdentRuleForm').submit(function(e){
 		var ruleid = $('#editIdentRuleForm #rule_id').val().trim();
 		var urlAjax = "/identifiability/edit/" + ruleid;
+		var mySDFList = $('#editIdentRuleForm #sdfpicker').val();
+		var myRiskType = $('#risk_type').val();
+		var myRiskScore = $('#risk_score').val();
 		e.preventDefault();
 		$.ajax({
 			url: urlAjax,
 			type: "POST",
 			contentType: 'application/json;charset=UTF-8',
-			data: JSON.stringify($('#editIdentRuleForm').serializeArray().reduce(function(acc,cur) { acc[cur.name] = cur.value ; return acc }, {})),
+			data: JSON.stringify({
+					"sdflist": mySDFList,
+			        "risk_type": myRiskType,
+					"risk_score": myRiskScore
+				  }),
 			success: function(data){
 				if (data.redirect) {
 					// data.redirect contains the string URL to redirect to
@@ -248,7 +273,7 @@ $(function(){
 });
 $(function(){
 	$('#deleteIdentRuleForm').submit(function(e){
-		var delid = $('#deleteIdentRuleForm #sdf_id').val().trim();
+		var delid = $('#deleteIdentRuleForm #rule_id').val().trim();
 		var urlAjax = "/identifiability/delete/" + delid;
 		e.preventDefault();
 		$.ajax({

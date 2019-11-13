@@ -79,16 +79,31 @@ def find_ident_rules(sensitivefields):
 
 def compare_submission(domainlist, geolist, sourcelist, usagelist, identruleslist):
 
-  domainscorelist = [ int(x.split("|")[1]) for x in domainlist ]
-  domainscorelist.sort()
-  geoscorelist = [ int(x.split("|")[1]) for x in geolist ]
-  geoscorelist.sort()
-  sourcescorelist = [ int(x.split("|")[1]) for x in sourcelist ]
-  sourcescorelist.sort()
-  usagescorelist = [ int(x.split("|")[1]) for x in usagelist ]
-  usagescorelist.sort()
-  identscorelist = [ x[1] for x in identruleslist ]
-  identscorelist.sort()
+  if len(domainlist) == 0:
+    domainscorelist = [ 0 ]
+  else:
+    domainscorelist = [ int(x.split("|")[1]) for x in domainlist ]
+    domainscorelist.sort()
+  if len(geolist) == 0:
+    geoscorelist = [ 0 ]
+  else:
+    geoscorelist = [ int(x.split("|")[1]) for x in geolist ]
+    geoscorelist.sort()
+  if len(sourcelist) == 0:
+    sourcescorelist = [ 0 ]
+  else:
+    sourcescorelist = [ int(x.split("|")[1]) for x in sourcelist ]
+    sourcescorelist.sort()
+  if len(usagelist) == 0:
+    usagescorelist = [ 0 ]
+  else:
+    usagescorelist = [ int(x.split("|")[1]) for x in usagelist ]
+    usagescorelist.sort()
+  if len(identruleslist) == 0:
+    identscorelist = [ 0 ]
+  else:
+    identscorelist = [ x[1] for x in identruleslist ]
+    identscorelist.sort()
 
   classdict = { "domain"          : domainscorelist[-1],
                 "geography"       : geoscorelist[-1],
@@ -104,16 +119,42 @@ def compare_submission(domainlist, geolist, sourcelist, usagelist, identruleslis
   allclass = classificationdbo.query.all()
   froblist = []
   for c in allclass:
+    # Known domains
     kdomlist = c.domain_list
-    kdomlist.sort()
+    if len(kdomlist) == 0:
+      kdomlist = [0]
+    else:
+      kdomlist.sort()
+
+    # Known sources
     ksrclist = c.source_list
-    ksrclist.sort()
+    if len(ksrclist) == 0:
+      ksrclist = [0]
+    else:
+      ksrclist.sort()
+
+    # Known geographies
     kgeolist = c.geography_list
-    kgeolist.sort()
+    if len(kgeolist) == 0:
+      kgeolist = [0]
+    else:
+      kgeolist.sort()
+    
+    # Known usages
     kuselist = c.usage_list
-    kuselist.sort()
+    if len(kuselist) == 0:
+      kuselist = [0]
+    else:
+      kuselist.sort()
+
+    # Known identifiability rules
     kidrlist = c.identifiability_rule_list
-    kidrlist.sort()
+    if len(kidrlist) == 0:
+      kidrlist = [0]
+    else:
+      kidrlist.sort()
+
+    # Build vector  
     knownnpar = numpy.array([kdomlist[-1],ksrclist[-1],kgeolist[-1],kuselist[-1],kidrlist[-1]])
     print(knownnpar)
     froblist.append( ( c.classification_id , numpy.linalg.norm(subnpar-knownnpar) ) )
@@ -172,14 +213,14 @@ def submit_classification():
                             contract_id_list=[]
                            )
 
-  # try:
-  #   # add classification to the database
-  #   db.session.add(submitdata)
-  #   db.session.commit()
-  #   print('You have successfully added a new classification.')
-  # except SQLAlchemyError as e:
-  #   # in case classification already exists
-  #   print(e)
+  try:
+    # add classification to the database
+    db.session.add(submitdata)
+    db.session.commit()
+    print('You have successfully added a new classification.')
+  except SQLAlchemyError as e:
+    # in case classification already exists
+    print(e)
 
 
 
@@ -187,14 +228,21 @@ def submit_classification():
   froblist = compare_submission(domainlist, geolist, sourcelist, usagelist, identruleslist)
   
   print(json.dumps(froblist, indent=4))
-  foundclass = froblist[0][1] == 0
   classdata = classificationdbo.query.get_or_404(froblist[0][0])
-  retdict = { "found" : str(foundclass),
-              "classid": classdata.classification_id,
-              "recipeid": classdata.recipe_id,
-              "label": classdata.label,
-              "identlist" : [ str(x[0]) + "|" +str(x[1]) for x in identruleslist ]
-            }
+  if froblist[0][1] == 0:
+    retdict = { "found" : True,
+                "classid": classdata.classification_id,
+                "recipeid": classdata.recipe_id,
+                "label": classdata.label,
+                "identlist" : [ str(x[0]) + "|" +str(x[1]) for x in identruleslist ]
+              }
+  else:
+    retdict = { "found" : False,
+                "classid": classdata.classification_id,
+                "recipeid": classdata.recipe_id,
+                "label": classdata.label,
+                "identlist" : [ str(x[0]) + "|" +str(x[1]) for x in identruleslist ]
+              }
 
     
   return jsonify(retdict)
