@@ -2,15 +2,20 @@ from flask import abort, flash, redirect, render_template, url_for, request
 from flask_paginate import Pagination, get_page_args
 from sqlalchemy import asc
 import json
+from flask_login import login_required
 
 from . import sdf_dim
 from .forms import SensitiveFieldsForm
 from .. import db
 from ..models import sdf_dim as sdfdbo
+from ..helpers import confirm_user_is_admin
   
 
 @sdf_dim.route('/sensitive-fields', methods=['GET', 'POST'])
+@login_required
 def list_sensitive_fields():
+
+  confirm_user_is_admin()
   
   # List all sdf_dims
   sdflist = sdfdbo.query.order_by(asc(sdfdbo.sdf_name)).all()
@@ -30,7 +35,11 @@ def list_sensitive_fields():
 
 
 @sdf_dim.route('/sensitive-fields/add', methods=['GET', 'POST'])
+@login_required
 def add_sdf_dim():
+
+  confirm_user_is_admin()
+
   # Add a sdf_dim to the database
 
   add_sdf_dim = True
@@ -61,7 +70,10 @@ def add_sdf_dim():
 
 
 @sdf_dim.route('/sensitive-fields/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_sdf_dim(id):
+
+  confirm_user_is_admin()
 
   # Edit a sdf_dim
   add_sdf_dim = False
@@ -83,7 +95,10 @@ def edit_sdf_dim(id):
 
 
 @sdf_dim.route('/sensitive-fields/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
 def delete_sdf_dim(id):
+
+  confirm_user_is_admin()
 
   # Delete a sdf_dim from the database
 

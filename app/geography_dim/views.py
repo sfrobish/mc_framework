@@ -2,15 +2,20 @@ from flask import abort, flash, redirect, render_template, url_for, request
 from flask_paginate import Pagination, get_page_args
 from sqlalchemy import asc
 import json
+from flask_login import login_required
 
 from . import geography
 from .forms import GeographyForm
 from .. import db
 from ..models import geography_dim as geographydbo
+from ..helpers import confirm_user_is_admin
   
 
 @geography.route('/geography', methods=['GET', 'POST'])
+@login_required
 def list_geography():
+
+  confirm_user_is_admin()
   
   # List all geography
   geographylist = geographydbo.query.order_by(asc(geographydbo.geo_name)).all()
@@ -30,7 +35,11 @@ def list_geography():
 
 
 @geography.route('/geography/add', methods=['GET', 'POST'])
+@login_required
 def add_geography():
+
+  confirm_user_is_admin()
+
   # Add a geography to the database
 
   add_geography = True
@@ -64,7 +73,10 @@ def add_geography():
 
 
 @geography.route('/geography/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_geography(id):
+
+  confirm_user_is_admin()
 
   print("made it " + str(id))
   # Edit a geography
@@ -86,7 +98,10 @@ def edit_geography(id):
 
 
 @geography.route('/geography/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
 def delete_geography(id):
+
+  confirm_user_is_admin()
 
   # Delete a geography from the database
   print(id)

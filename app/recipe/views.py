@@ -2,6 +2,7 @@ from flask import abort, flash, redirect, render_template, url_for, request
 from flask_paginate import Pagination, get_page_args
 from sqlalchemy import asc
 import json
+from flask_login import login_required
 
 from . import recipe
 from .forms import RecipeForm
@@ -9,10 +10,14 @@ from .. import db
 from ..models import recipe as recipedbo
 from ..models import control as controldbo
 from ..models import control_recipe as controlrecipedbo
+from ..helpers import confirm_user_is_admin
   
 
 @recipe.route('/recipes', methods=['GET', 'POST'])
+@login_required
 def list_recipes():
+
+  confirm_user_is_admin()
   
   # List all recipes
   recipeslist = recipedbo.query.order_by(asc(recipedbo.recipe_name)).all()
@@ -31,7 +36,11 @@ def list_recipes():
 
 
 @recipe.route('/recipes/add', methods=['GET', 'POST'])
+@login_required
 def add_recipe():
+
+  confirm_user_is_admin()
+
   # Add a recipe to the database
 
   add_recipe = True
@@ -59,7 +68,10 @@ def add_recipe():
   return redirect(url_for('recipe.list_recipes'))
 
 @recipe.route('/recipes/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_recipe(id):
+
+  confirm_user_is_admin()
 
   # Edit a department
   add_recipe = False
@@ -77,7 +89,10 @@ def edit_recipe(id):
 
 
 @recipe.route('/recipes/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
 def delete_recipe(id):
+
+  confirm_user_is_admin()
 
   # Delete a department from the database
 

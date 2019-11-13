@@ -1,5 +1,6 @@
 from flask import abort, flash, redirect, render_template, url_for
 from sqlalchemy import text
+from flask_login import login_required
 
 from . import control_recipe
 from .forms import ControlRecipeForm
@@ -7,10 +8,14 @@ from .. import db
 from ..models import control as controldbo
 from ..models import recipe as recipedbo
 from ..models import control_recipe as controlrecipedbo
+from ..helpers import confirm_user_is_admin
 
 
 @control_recipe.route('/control_recipes', methods=['GET', 'POST'])
+@login_required
 def list_control_recipes():
+  
+  confirm_user_is_admin()
   
   # List all recipes
   sql = text("select cr.control_recipe_id, c.control_id, c.control_name, " +
@@ -27,42 +32,48 @@ def list_control_recipes():
 
 
 @control_recipe.route('/control_recipes/add/<int:rid>/<int:cid>', methods=['GET', 'POST'])
+@login_required
 def add_control_recipe(rid, cid):
-
+  
+  confirm_user_is_admin()
+  
   # Add a control recipe to the database
-
-    add_control_recipe = True
-    
-    form = ControlRecipeForm()
-    """   if form.is_submitted:
-      print("Submitted")
-    if form.validate():
-      print("VALID ONE")
-    print(form.errors)
-    if form.validate_on_submit():
-      print("VALID") """
-    crdata = controlrecipedbo(control_id=cid, #form.control_id.data,
-                              recipe_id=rid) #form.recipe_id.data)
-    try:
-      # add control recipe to the database
-      db.session.add(crdata)
-      db.session.commit()
-      flash('You have successfully added a new control recipe.')
-    except:
-      # in case control recipe id already exists
-      flash('Error: control recipe already exists.')
-    
-    # redirect to controls page
-    return redirect(url_for('control_recipe.list_control_recipes'))
+  
+  add_control_recipe = True
+  
+  form = ControlRecipeForm()
+  """   if form.is_submitted:
+    print("Submitted")
+  if form.validate():
+    print("VALID ONE")
+  print(form.errors)
+  if form.validate_on_submit():
+    print("VALID") """
+  crdata = controlrecipedbo(control_id=cid, #form.control_id.data,
+                            recipe_id=rid) #form.recipe_id.data)
+  try:
+    # add control recipe to the database
+    db.session.add(crdata)
+    db.session.commit()
+    flash('You have successfully added a new control recipe.')
+  except:
+    # in case control recipe id already exists
+    flash('Error: control recipe already exists.')
+  
+  # redirect to controls page
+  return redirect(url_for('control_recipe.list_control_recipes'))
 
   # load control template
-    # return render_template('recipe/recipe_crud.html', action="Add",
-    #                       add_control_recipe=add_control_recipe, form=form,
-    #                       title="Add Control Recipe")
+  # return render_template('recipe/recipe_crud.html', action="Add",
+  #                       add_control_recipe=add_control_recipe, form=form,
+  #                       title="Add Control Recipe")
 
 
 @control_recipe.route('/control_recipes/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_control_recipe(id):
+
+  confirm_user_is_admin()
 
   # Edit a control recipe
   add_control_recipe = False
@@ -89,7 +100,10 @@ def edit_control_recipe(id):
 
 
 @control_recipe.route('/control_recipes/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
 def delete_control_recipe(id):
+
+  confirm_user_is_admin()
 
   # Delete a control recipe from the database
 

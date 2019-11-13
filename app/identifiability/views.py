@@ -2,15 +2,20 @@ from flask import abort, flash, redirect, render_template, url_for, request
 from flask_paginate import Pagination, get_page_args
 from sqlalchemy import asc
 import json
+from flask_login import login_required
 
 from . import ident_dim
 from .forms import IdentifiabilityForm
 from .. import db
 from ..models import ident_dim as identdbo
+from ..helpers import confirm_user_is_admin
   
 
 @ident_dim.route('/identifiability', methods=['GET', 'POST'])
+@login_required
 def list_ident_rules():
+
+  confirm_user_is_admin()
   
   # List all ident_dims
   identlist = identdbo.query.order_by(asc(identdbo.rule_id)).all()
@@ -30,7 +35,11 @@ def list_ident_rules():
 
 
 @ident_dim.route('/identifiability/add', methods=['GET', 'POST'])
+@login_required
 def add_ident_dim():
+
+  confirm_user_is_admin()
+
   # Add a ident_dim to the database
 
   add_ident_dim = True
@@ -61,7 +70,10 @@ def add_ident_dim():
 
 
 @ident_dim.route('/identifiability/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_ident_dim(id):
+
+  confirm_user_is_admin()
 
   # Edit a ident_dim
   add_ident_dim = False
@@ -81,7 +93,10 @@ def edit_ident_dim(id):
 
 
 @ident_dim.route('/identifiability/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
 def delete_ident_dim(id):
+
+  confirm_user_is_admin()
 
   # Delete a ident_dim from the database
 
