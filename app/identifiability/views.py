@@ -14,15 +14,14 @@ from ..models import sdf_dim as sdfdbo
 def list_ident_rules():
   
   # List all ident_dims with Sensitive field names
-  sql = "select array_agg(f.sdf_name) as field_list, i.rule_id, i.risk_score, i.risk_type \
+  sql = "select array_agg(f.sdf_name) as field_list, array_agg(f.sdf_id) as field_id_list, \
+                i.rule_id, i.risk_score, i.risk_type \
         from mc_demo.identifiability_rules i \
         left join mc_demo.sensitive_data_fields f \
         on f.sdf_id = any(i.field_id_list) \
         group by i.rule_id"
   result = db.engine.execute(sql)
-  print(result)
-  identlist = [row for row in result]
-  print(identlist)
+  identlist = [ row for row in result ]
 
   # Sensitive data fields for populating the selectpicker
   sdflist = sdfdbo.query.order_by(asc(sdfdbo.sdf_name)).all()
@@ -48,17 +47,11 @@ def add_ident_dim():
 
   add_ident_dim = True
 
-  form = IdentifiabilityForm()
-  """   if form.is_submitted:
-    print("Submitted")
-  if form.validate():
-    print("VALID ONE")
-  print(form.errors)
-  if form.validate_on_submit():
-    print("VALID") """
-  identdata = identdbo(risk_type=form.risk_type.data,
-                       risk_score=form.risk_score.data,
-                       field_list=form.sdfpicker.data)
+  identdict = request.json
+  identdict["sdflist"] = [ int(x) for x in identdict["sdflist"] ]
+  identdata = identdbo(risk_type=identdict["risk_type"],
+                       risk_score=identdict["risk_score"],
+                       field_id_list=identdict["sdflist"])
 
   try:
     # add ident_dim to the database
@@ -80,11 +73,13 @@ def edit_ident_dim(id):
   add_ident_dim = False
 
   identdata = identdbo.query.get_or_404(id)
-  form = IdentifiabilityForm(obj=identdata)
-  #if form.validate_on_submit():
-  identdata.risk_type = form.risk_type.data
-  identdata.risk_score = form.risk_score.data
-  identdata.field_list = form.sdfpicker.data
+
+  identdict = request.json
+  identdict["sdflist"] = [ int(x) for x in identdict["sdflist"] ]
+
+  identdata.risk_type = identdict["risk_type"]
+  identdata.risk_score = identdict["risk_score"]
+  identdata.field_id_list = identdict["sdflist"]
   
   db.session.commit()
   flash('You have successfully edited the sdf.')
