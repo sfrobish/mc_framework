@@ -37,10 +37,10 @@ def list_contracts():
 @contract.route('/contracts/add', methods=['GET', 'POST'])
 @login_required
 def add_contract():
-  # Add a contract to the database
 
   confirm_user_is_admin()
 
+  # Add a contract to the database
   add_contract = True
 
   form = ContractForm()

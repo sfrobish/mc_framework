@@ -36,10 +36,10 @@ def list_controls():
 @control.route('/controls/add', methods=['GET', 'POST'])
 @login_required
 def add_control():
-  # Add a control to the database
 
   confirm_user_is_admin()
 
+  # Add a control to the database
   add_control = True
 
   form = ControlForm()
