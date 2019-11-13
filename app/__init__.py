@@ -6,6 +6,8 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
+from flask_login import LoginManager
+
 # local imports
 from config import app_config
 
@@ -20,13 +22,39 @@ def create_app(config_name):
   app = Flask(__name__, instance_relative_config=True)
   app.config.from_object(app_config[config_name])
   #app.config.from_pyfile('config.py')
-  
+
+  # setup for flask_login
+  login_manager = LoginManager()
+  login_manager.login_view = 'auth.login'
+  login_manager.init_app(app)
+
+  from .models import user
+
+  @login_manager.user_loader
+  def load_user(user_id):
+    return user.query.get(int(user_id))
+
+  def role_required(role_name):
+    def decorator(func):
+      @wraps(func)
+      def authorize(*args, **kwargs):
+        if not current_user.has_role(role_name):
+          abort(401) # not authorized
+        return func(*args, **kwargs)
+      return authorize
+    return decorator
+
   Bootstrap(app)
   csrf.init_app(app)
   db.init_app(app)
 
   migrate = Migrate(app, db)
   from app import models
+
+  # blueprint for auth routes in our app
+  from .auth import auth as auth_blueprint
+  csrf.exempt(auth_blueprint)
+  app.register_blueprint(auth_blueprint)
 
   from .home import home as home_blueprint
   app.register_blueprint(home_blueprint)
@@ -36,6 +64,7 @@ def create_app(config_name):
   app.register_blueprint(control_blueprint)
 
   from .recipe import recipe as recipe_blueprint
+  csrf.exempt(recipe_blueprint)
   app.register_blueprint(recipe_blueprint)
   
   from .control_recipe import control_recipe as control_recipe_blueprint

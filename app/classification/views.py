@@ -5,6 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 import json
 import re
 import numpy
+from flask_login import login_required
 
 from . import classification
 from .forms import ClassificationForm
@@ -21,6 +22,7 @@ from ..models import classification as classificationdbo
   
 
 @classification.route('/classification', methods=['GET', 'POST'])
+@login_required
 def start_new_classification():
   
   domainlist = domaindbo.query.order_by(asc(domaindbo.domain_name)).all()
@@ -164,6 +166,7 @@ def compare_submission(domainlist, geolist, sourcelist, usagelist, identruleslis
 
 
 @classification.route('/classification/submit', methods=['GET', 'POST'])
+@login_required
 def submit_classification():
 
   # Submit a new classification for evaluation
@@ -246,6 +249,7 @@ def submit_classification():
 
 
 @classification.route('/classification/add', methods=['GET', 'POST'])
+@login_required
 def add_classification():
   
   submitobj = request.get_json()

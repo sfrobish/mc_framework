@@ -29,10 +29,13 @@
             </button>
             
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
+              <ul class="navbar-nav mr-auto">
+                {% if current_user.is_authenticated %}
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ url_for('home.homepage') }}">Home <span class="sr-only">(current)</span></a>
                 </li>
+                {% endif %}
+                {% if current_user.user_is_admin %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" 
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Edit Controls/Recipes</a>
@@ -60,7 +63,22 @@
                         <a class="dropdown-item" href="{{ url_for('ident_dim.list_ident_rules') }}">Identifiability Rules</a>
                     </div>
                 </li>
-                </ul>
+                {% endif %}
+              </ul>
+              {% if current_user.is_authenticated %}
+                <span class="navbar-text">
+                    <a href="{{ url_for('auth.logout') }}" class="nav-link">
+                        Logout
+                    </a>
+                </span>
+              {% else %}
+                <span class="navbar-text">
+                    <a href="{{ url_for('auth.login') }}" class="nav-link">
+                        Login
+                    </a>
+                </span>
+
+              {% endif %}
             </div>
         </nav>
     </div>

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from app import db
-
+from flask_login import UserMixin
 
 class basemodel(db.Model):
   __abstract__ = True
@@ -24,6 +24,20 @@ class basemodel(db.Model):
             for column, value in self._to_dict().items()
     }
 
+class user(UserMixin, basemodel):
+  __tablename__ = "user"
+  user_id = db.Column(db.Integer, unique=True, nullable=False, primary_key=True) 
+  user_email = db.Column(db.String(100), unique=True, nullable=False)
+  user_password_digest = db.Column(db.String(100), nullable=False)
+  user_is_admin = db.Column(db.Boolean, default=False, nullable=False)
+
+  def get_id(self):
+    return self.user_id
+
+  def __init__(self, **kwargs):
+    self.user_email = kwargs.get("user_email")
+    self.user_password_digest = kwargs.get("user_password_digest")
+    self.user_is_admin = kwargs.get("user_is_admin")
 
 class control(basemodel):
   __tablename__ = "control"

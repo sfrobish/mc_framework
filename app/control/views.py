@@ -2,15 +2,19 @@ from flask import abort, flash, redirect, render_template, url_for, request
 from flask_paginate import Pagination, get_page_args
 from sqlalchemy import asc
 import json
+from flask_login import login_required
 
 from . import control
 from .forms import ControlForm
 from .. import db
 from ..models import control as controldbo
-  
+from ..helpers import confirm_user_is_admin
 
 @control.route('/controls', methods=['GET', 'POST'])
+@login_required
 def list_controls():
+  
+  confirm_user_is_admin()
   
   # List all controls
   controlslist = controldbo.query.order_by(asc(controldbo.control_name)).all()
@@ -30,9 +34,12 @@ def list_controls():
 
 
 @control.route('/controls/add', methods=['GET', 'POST'])
+@login_required
 def add_control():
-  # Add a control to the database
 
+  confirm_user_is_admin()
+
+  # Add a control to the database
   add_control = True
 
   form = ControlForm()
@@ -59,7 +66,10 @@ def add_control():
 
 
 @control.route('/controls/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
 def edit_control(id):
+
+  confirm_user_is_admin()
 
   # Edit a control
   add_control = False
@@ -83,7 +93,10 @@ def edit_control(id):
 
 
 @control.route('/controls/delete/<int:id>', methods=['GET', 'POST'])
+@login_required
 def delete_control(id):
+
+  confirm_user_is_admin()
 
   # Delete a control from the database
 
