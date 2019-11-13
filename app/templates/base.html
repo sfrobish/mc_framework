@@ -64,11 +64,18 @@
                 {% endif %}
               </ul>
               {% if current_user.is_authenticated %}
-              <span class="navbar-text">
-                  <a href="{{ url_for('auth.logout') }}" class="nav-link">
-                      Logout
-                  </a>
-              </span>
+                <span class="navbar-text">
+                    <a href="{{ url_for('auth.logout') }}" class="nav-link">
+                        Logout
+                    </a>
+                </span>
+              {% else %}
+                <span class="navbar-text">
+                    <a href="{{ url_for('auth.login') }}" class="nav-link">
+                        Login
+                    </a>
+                </span>
+
               {% endif %}
             </div>
         </nav>
