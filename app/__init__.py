@@ -7,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 from flask_login import LoginManager
+from flask_cors import CORS
 
 # local imports
 from config import app_config
@@ -22,6 +23,12 @@ def create_app(config_name):
   app = Flask(__name__, instance_relative_config=True)
   app.config.from_object(app_config[config_name])
   #app.config.from_pyfile('config.py')
+
+  CORS(app, supports_credentials=True)
+  
+  # NOTE: SET THIS IN AN ENVIRONMENT VAR ON AWS
+  app.secret_key = 'shhhhh'
+
 
   # setup for flask_login
   login_manager = LoginManager()
