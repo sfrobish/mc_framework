@@ -9,6 +9,7 @@ from .forms import GeographyForm
 from .. import db
 from ..models import geography_dim as geographydbo
 from ..helpers import confirm_user_is_admin
+from ..helpers import get_nested_children
   
 
 @geography.route('/geography', methods=['GET', 'POST'])
@@ -23,23 +24,6 @@ def list_geography():
   page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
   total = len(geographylist)
 
-  def get_nested_children(models, parent_id = None, depth = 1):
-     nested_tree_list = []
- 
-     for model in models:
-         if model.parent_geo_id == parent_id:
-             setattr(model, "depth", depth)
-             setattr(model, "children", [])
- 
-             nested_tree_list.append(model)
- 
-             children = get_nested_children(models, model.geo_id, depth + 1)
- 
-             if len(children):
-                 nested_tree_list[-1].children = [o.geo_id for o in children]
-                 nested_tree_list.extend(children)
- 
-     return nested_tree_list
 
   nested_geographylist = get_nested_children(geographylist)
 

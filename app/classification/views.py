@@ -18,6 +18,7 @@ from ..models import sdf_dim as sdfdbo
 from ..models import ident_dim as identdbo
 from ..models import submitted_forms as submitteddbo
 from ..models import classification as classificationdbo
+from ..helpers import get_nested_children
 
   
 
@@ -27,13 +28,14 @@ def start_new_classification():
   
   domainlist = domaindbo.query.order_by(asc(domaindbo.domain_name)).all()
   geographylist = geographydbo.query.order_by(asc(geographydbo.geo_name)).all()
+  nested_geographylist = get_nested_children(geographylist)
   sourcelist = sourcedbo.query.order_by(asc(sourcedbo.source_name)).all()
   usagelist = usagedbo.query.order_by(asc(usagedbo.usage_name)).all()
 
 
   return render_template('classification/classification_multitab_template.html',
                            domainlist=domainlist,
-                           geographylist=geographylist,
+                           geographylist=nested_geographylist,
                            sourcelist=sourcelist,
                            usagelist=usagelist,
                            title="Get Classification")

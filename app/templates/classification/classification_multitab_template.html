@@ -77,12 +77,19 @@
                   <tr>
                     <td>
                       <span class="custom-checkbox">
-                        <input type="checkbox" id="{{ 'geography' ~ geography.geo_id }}" name="geography"
-                              value="{{ geography.geo_id }}|{{ geography.similarity_score }}">
+                        <input 
+                          type="checkbox" 
+                          id="{{ 'geography' ~ geography.geo_id }}" 
+                          name="geography"
+                          value="{{ geography.geo_id }}|{{ geography.similarity_score }}"
+                          data-id="{{ geography.geo_id }}"
+                          data-children="{{ geography.children|safe }}"
+                          data-parent="{{ geography.parent_geo_id }}"
+                        >
                         <label for="checkbox1"></label>
                       </span>
                     </td>
-                    <td> {{ geography.geo_name }} </td>
+                    <td> {% for space in range(1, geography.depth) %}<span> &#0149; </span>{% endfor %}{{ geography.geo_name }} </td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -355,6 +362,27 @@ $(document).ready(function() {
 			}
 		});
 	});
+  var checkbox = $('table tbody input[type="checkbox"]');
+
+  checkbox.click(function () {
+    const parent_elem_tag = '#geography' + $(this).data('parent');
+    const parent = $(parent_elem_tag);
+    if (parent.length) {
+      const sibling_elem_ids = parent.data('children');
+      const sibling_elem_tags = sibling_elem_ids.map(id => `#geography${id}`);
+      const all_siblings_checked = sibling_elem_tags.reduce((sum, next) => sum && $(next).prop("checked"), true);
+      if (all_siblings_checked) {
+        parent.prop("checked", true);
+      }
+      if (!this.checked && parent.prop("checked")) {
+        parent.prop("checked", false);
+      }
+    }
+    const children_elem_ids = $(this).data('children');
+    const children_elem_tags = children_elem_ids.map(id => `#geography${id}`);
+    children_elem_tags.forEach(tag => $(tag).prop("checked", this.checked));
+
+  });
 
 });
 
