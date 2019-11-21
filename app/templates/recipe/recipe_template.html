@@ -43,8 +43,12 @@
           <td> {{ recipe.recipe_name }} </td>
           <td> {{ recipe.recipe_description }} </td>
           <td>
-            <a href="#editRecipeModal" class="edit" data-toggle="modal" data-id="{{ recipe.recipe_id }}"
-              data-name="{{ recipe.recipe_name }}" data-description="{{ recipe.recipe_descr }}">
+            <a href="#editRecipeModal" class="edit" 
+              data-toggle="modal" data-id="{{ recipe.recipe_id }}"
+              data-name="{{ recipe.recipe_name }}" 
+              data-description="{{ recipe.recipe_descr }}"
+              data-controls="{{ recipe.selected_control_ids|safe }}"
+            >
               <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
             </a>
           </td>
@@ -110,6 +114,20 @@
           <div class="form-group">
             <label>Description</label>
             <input type="text" class="form-control" name="description" id="description" required>
+          </div>
+          <div class="form-group">
+            <label>Controls</label>
+            <select multiple class="form-control" id="controls" required>
+              {% for control in controlslist %}
+                <option 
+                  id="{{ 'control' ~ control.control_id }}" 
+                  class="control-option"
+                  value="{{ control.control_id }}"
+                >
+                  {{ control.control_name }}
+                </option>
+              {% endfor %}
+            </select>
           </div>
         </div>
         <div class="modal-footer">
@@ -185,6 +203,13 @@
       $(".modal-body #name").val(myRecipeName);
       var myRecipeDesc = $(this).data('description');
       $(".modal-body #description").val(myRecipeDesc);
+      const controls = $(this).data('controls');
+      $(".control-option").removeAttr("selected");
+      console.log('ding')
+      controls.forEach((control_id) => {
+        console.log(control_id);
+        $(`#control${control_id}`).attr("selected", "true");
+      });
     });
     $(document).on("click", ".delete", function () {
       var myRecipeId = $(this).data('id');

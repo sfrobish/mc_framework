@@ -21,14 +21,25 @@ def list_recipes():
   
   # List all recipes
   recipeslist = recipedbo.query.order_by(asc(recipedbo.recipe_name)).all()
+  controlslist = controldbo.query.order_by(asc(controldbo.control_name)).all()
+  controlrecipeslist = controlrecipedbo.query.all()
+
+  for recipe in recipeslist:
+    matching_controlrecipes = filter(lambda x: x.recipe_id == recipe.recipe_id, controlrecipeslist)
+    selected_control_ids = [x.control_id for x in matching_controlrecipes]
+    setattr(recipe, "selected_control_ids", selected_control_ids)
 
   page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
   total = len(recipeslist)
   pagination_recipes = recipeslist[offset: offset + per_page]
   pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
+  for x in controlslist:
+      print(x.control_name)
+
   return render_template('recipe/recipe_template.html',
                            recipelist=pagination_recipes,
+                           controlslist=controlslist,
                            pagination=pagination,
                            page=page,
                            per_page=per_page,
