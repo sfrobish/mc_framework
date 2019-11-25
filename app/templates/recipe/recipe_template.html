@@ -46,7 +46,7 @@
             <a href="#editRecipeModal" class="edit" 
               data-toggle="modal" data-id="{{ recipe.recipe_id }}"
               data-name="{{ recipe.recipe_name }}" 
-              data-description="{{ recipe.recipe_descr }}"
+              data-description="{{ recipe.recipe_description }}"
               data-controls="{{ recipe.selected_control_ids|safe }}"
             >
               <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
@@ -117,14 +117,14 @@
           </div>
           <div class="form-group">
             <label>Controls</label>
-            <select multiple class="form-control" id="controls" required>
+            <select multiple class="form-control" name="controls[]" id="controls" required>
               {% for control in controlslist %}
                 <option 
                   id="{{ 'control' ~ control.control_id }}" 
                   class="control-option"
                   value="{{ control.control_id }}"
                 >
-                  {{ control.control_name }}
+                  {{ control.control_id }}
                 </option>
               {% endfor %}
             </select>
@@ -205,9 +205,7 @@
       $(".modal-body #description").val(myRecipeDesc);
       const controls = $(this).data('controls');
       $(".control-option").removeAttr("selected");
-      console.log('ding')
       controls.forEach((control_id) => {
-        console.log(control_id);
         $(`#control${control_id}`).attr("selected", "true");
       });
     });
@@ -238,12 +236,27 @@
       $('#editRecipeForm').submit(function (e) {
         var edid = $('#editRecipeForm #recipeid').val().trim();
         var urlAjax = "/recipes/edit/" + edid;
+        
+        const postData = JSON.stringify($('#editRecipeForm').serializeArray().reduce((acc, cur) => {
+          if (cur.name === 'controls[]') {
+            const existingValue = acc[cur.name];
+            if (existingValue) {
+              acc[cur.name] = [ ...existingValue, cur.value]
+            } else {
+              acc[cur.name] = [cur.value];
+            }
+          } else {
+              acc[cur.name] = cur.value;
+          }
+          return acc;
+        }, {}));
+
         e.preventDefault();
         $.ajax({
-          url: urlAjax,
+          url: url,
           type: "POST",
           contentType: 'application/json;charset=UTF-8',
-          data: JSON.stringify($('#editRecipeForm').serializeArray().reduce(function (acc, cur) { acc[cur.name] = cur.value; return acc }, {})),
+          data: postData,
           success: function (data) {
             if (data.redirect) {
               // data.redirect contains the string URL to redirect to
@@ -255,7 +268,7 @@
               location.reload();
             }
           }
-        });
+        })
       });
     });
     $(function () {

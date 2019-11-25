@@ -11,7 +11,7 @@ from ..models import recipe as recipedbo
 from ..models import control as controldbo
 from ..models import control_recipe as controlrecipedbo
 from ..helpers import confirm_user_is_admin
-  
+
 
 @recipe.route('/recipes', methods=['GET', 'POST'])
 @login_required
@@ -33,9 +33,6 @@ def list_recipes():
   total = len(recipeslist)
   pagination_recipes = recipeslist[offset: offset + per_page]
   pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-
-  for x in controlslist:
-      print(x.control_name)
 
   return render_template('recipe/recipe_template.html',
                            recipelist=pagination_recipes,
@@ -88,6 +85,7 @@ def edit_recipe(id):
   add_recipe = False
 
   recipedata = recipedbo.query.get_or_404(id)
+
   form = RecipeForm(obj=recipedata)
   #if form.validate_on_submit():
   recipedata.recipe_name = form.name.data
