@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Domain Dimension{% endblock %}
+{% block title %}Recipe{% endblock %}
 {% block body %}
 <div class="container">
   <div class="table-wrapper">
@@ -43,8 +43,12 @@
           <td> {{ recipe.recipe_name }} </td>
           <td> {{ recipe.recipe_description }} </td>
           <td>
-            <a href="#editRecipeModal" class="edit" data-toggle="modal" data-id="{{ recipe.recipe_id }}"
-              data-name="{{ recipe.recipe_name }}" data-description="{{ recipe.recipe_descr }}">
+            <a href="#editRecipeModal" class="edit" 
+              data-toggle="modal" data-id="{{ recipe.recipe_id }}"
+              data-name="{{ recipe.recipe_name }}" 
+              data-description="{{ recipe.recipe_description }}"
+              data-controlslist="{{ recipe.control_id_list }}"
+            >
               <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
             </a>
           </td>
@@ -111,6 +115,14 @@
             <label>Description</label>
             <input type="text" class="form-control" name="description" id="description" required>
           </div>
+          <div class="form-group">
+            <label>Controls</label>
+            <select id="controlpicker" name="controlpicker[]" class="selectpicker" multiple>
+              {% for control in controlslist %}
+                <option value="{{ control.control_id }}">{{ control.control_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
         </div>
         <div class="modal-footer">
           <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
@@ -156,107 +168,118 @@
 
 {% block jscript %}
 <script type="text/javascript">
-  $(document).ready(function () {
-    // Activate tooltip
-    $('[data-toggle="tooltip"]').tooltip();
+$.fn.selectpicker.Constructor.BootstrapVersion = '4';
+$(document).ready(function () {
+  // Activate tooltip
+  $('[data-toggle="tooltip"]').tooltip();
 
-    // Select/Deselect checkboxes
-    var checkbox = $('table tbody input[type="checkbox"]');
-    $("#selectAll").click(function () {
-      if (this.checked) {
-        checkbox.each(function () {
-          this.checked = true;
-        });
-      } else {
-        checkbox.each(function () {
-          this.checked = false;
-        });
-      }
-    });
-    checkbox.click(function () {
-      if (!this.checked) {
-        $("#selectAll").prop("checked", false);
-      }
-    });
-    $(document).on("click", ".edit", function () {
-      var myRecipeId = $(this).data('id');
-      $(".modal-body #recipeid").val(myRecipeId);
-      var myRecipeName = $(this).data('name');
-      $(".modal-body #name").val(myRecipeName);
-      var myRecipeDesc = $(this).data('description');
-      $(".modal-body #description").val(myRecipeDesc);
-    });
-    $(document).on("click", ".delete", function () {
-      var myRecipeId = $(this).data('id');
-      $(".modal-body #recipeid").val(myRecipeId);
-      var myRecipeName = $(this).data('name');
-      $(".modal-body #recipename").val(myRecipeName);
-      var myRecipeDesc = $(this).data('description');
-      $(".modal-body #recipedescription").val(myRecipeDesc);
-    });
-    $(function () {
-      $('#addRecipeForm').submit(function (e) {
-        e.preventDefault();
-        $.ajax({
-          url: "/recipes/add",
-          type: "POST",
-          contentType: 'application/json;charset=UTF-8',
-          data: JSON.stringify($('#addRecipeForm').serializeArray().reduce(function (acc, cur) { acc[cur.name] = cur.value; return acc }, {})),
-          success: function (data) {
-            $('#addRecipeForm').modal('hide');
-            location.reload();
-          }
-        });
+  // Select/Deselect checkboxes
+  var checkbox = $('table tbody input[type="checkbox"]');
+  $("#selectAll").click(function () {
+    if (this.checked) {
+      checkbox.each(function () {
+        this.checked = true;
       });
-    });
-    $(function () {
-      $('#editRecipeForm').submit(function (e) {
-        var edid = $('#editRecipeForm #recipeid').val().trim();
-        var urlAjax = "/recipes/edit/" + edid;
-        e.preventDefault();
-        $.ajax({
-          url: urlAjax,
-          type: "POST",
-          contentType: 'application/json;charset=UTF-8',
-          data: JSON.stringify($('#editRecipeForm').serializeArray().reduce(function (acc, cur) { acc[cur.name] = cur.value; return acc }, {})),
-          success: function (data) {
-            if (data.redirect) {
-              // data.redirect contains the string URL to redirect to
-              $('#editRecipeForm').modal('hide');
-              window.location.href = data.redirect;
-            } else {
-              // data.form contains the HTML for the replacement form
-              $("#editRecipeform").replaceWith(data.form);
-              location.reload();
-            }
-          }
-        });
+    } else {
+      checkbox.each(function () {
+        this.checked = false;
       });
-    });
-    $(function () {
-      $('#deleteRecipeForm').submit(function (e) {
-        var delid = $('#deleteRecipeForm #recipeid').val().trim();
-        var urlAjax = "/recipes/delete/" + delid;
-        e.preventDefault();
-        $.ajax({
-          url: urlAjax,
-          type: "POST",
-          contentType: 'application/json;charset=UTF-8',
-          data: "id=" + delid,
-          success: function (data) {
-            if (data.redirect) {
-              // data.redirect contains the string URL to redirect to
-              $('#deleteRecipeForm').modal('hide');
-              window.location.href = data.redirect;
-            } else {
-              // data.form contains the HTML for the replacement form
-              $("#deleteRecipeForm").replaceWith(data.form);
-              location.reload();
-            }
-          }
-        });
+    }
+  });
+  checkbox.click(function () {
+    if (!this.checked) {
+      $("#selectAll").prop("checked", false);
+    }
+  });
+  $(document).on("click", ".edit", function () {
+    var myRecipeId = $(this).data('id');
+    $(".modal-body #recipeid").val(myRecipeId);
+    var myRecipeName = $(this).data('name');
+    $(".modal-body #name").val(myRecipeName);
+    var myRecipeDesc = $(this).data('description');
+    $(".modal-body #description").val(myRecipeDesc);
+    var myControlList = $(this).data('controlslist');
+    $('.selectpicker').selectpicker('val', myControlList);
+  });
+  $(document).on("click", ".delete", function () {
+    var myRecipeId = $(this).data('id');
+    $(".modal-body #recipeid").val(myRecipeId);
+    var myRecipeName = $(this).data('name');
+    $(".modal-body #recipename").val(myRecipeName);
+    var myRecipeDesc = $(this).data('description');
+    $(".modal-body #recipedescription").val(myRecipeDesc);
+  });
+  $(function () {
+    $('#addRecipeForm').submit(function (e) {
+      e.preventDefault();
+      $.ajax({
+        url: "/recipes/add",
+        type: "POST",
+        contentType: 'application/json;charset=UTF-8',
+        data: JSON.stringify($('#addRecipeForm').serializeArray().reduce(function (acc, cur) { acc[cur.name] = cur.value; return acc }, {})),
+        success: function (data) {
+          $('#addRecipeForm').modal('hide');
+          location.reload();
+        }
       });
     });
   });
+  $(function () {
+    $('#editRecipeForm').submit(function (e) {
+      var edid = $('#editRecipeForm #recipeid').val().trim();
+      var url = "/recipes/edit/" + edid;
+      var myControlList = $('#editRecipeForm #controlpicker').val();
+      var myRecipeName = $('#editRecipeForm #name').val();
+      var myRecipeDesc = $('#editRecipeForm #description').val();
+
+      e.preventDefault();
+      $.ajax({
+        url: url,
+        type: "POST",
+        contentType: 'application/json;charset=UTF-8',
+        data: JSON.stringify({
+					"control_list": myControlList,
+			    "recipe_name": myRecipeName,
+					"recipe_desc": myRecipeDesc
+				}),
+        success: function (data) {
+          if (data.redirect) {
+            // data.redirect contains the string URL to redirect to
+            $('#editRecipeForm').modal('hide');
+            window.location.href = data.redirect;
+          } else {
+            // data.form contains the HTML for the replacement form
+            $("#editRecipeform").replaceWith(data.form);
+            location.reload();
+          }
+        }
+      })
+    });
+  });
+  $(function () {
+    $('#deleteRecipeForm').submit(function (e) {
+      var delid = $('#deleteRecipeForm #recipeid').val().trim();
+      var urlAjax = "/recipes/delete/" + delid;
+      e.preventDefault();
+      $.ajax({
+        url: urlAjax,
+        type: "POST",
+        contentType: 'application/json;charset=UTF-8',
+        data: "id=" + delid,
+        success: function (data) {
+          if (data.redirect) {
+            // data.redirect contains the string URL to redirect to
+            $('#deleteRecipeForm').modal('hide');
+            window.location.href = data.redirect;
+          } else {
+            // data.form contains the HTML for the replacement form
+            $("#deleteRecipeForm").replaceWith(data.form);
+            location.reload();
+          }
+        }
+      });
+    });
+  });
+});
 </script>
 {% endblock %}
