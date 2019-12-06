@@ -30,7 +30,6 @@
             <th>Parent</th>
             <th>Similarity</th>
             <th>Actions</th>
-
           </tr>
         </thead>
         <tbody>
@@ -236,7 +235,7 @@
       $('#addDomainForm').submit(function (e) {
         e.preventDefault();
         $.ajax({
-          url: "/domain/add",
+          url: "/domains/add",
           type: "POST",
           contentType: 'application/json;charset=UTF-8',
           data: JSON.stringify($('#addDomainForm').serializeArray().reduce(function (acc, cur) { acc[cur.name] = cur.value; return acc }, {})),
@@ -250,7 +249,7 @@
     $(function () {
       $('#editDomainForm').submit(function (e) {
         var edid = $('#editDomainForm #domainid').val().trim();
-        var urlAjax = "/domain/edit/" + edid;
+        var urlAjax = "/domains/edit/" + edid;
         e.preventDefault();
         $.ajax({
           url: urlAjax,
@@ -274,7 +273,7 @@
     $(function () {
       $('#deleteDomainForm').submit(function (e) {
         var delid = $('#deleteDomainForm #domainid').val().trim();
-        var urlAjax = "/domain/delete/" + delid;
+        var urlAjax = "/domains/delete/" + delid;
         e.preventDefault();
         $.ajax({
           url: urlAjax,

@@ -31,6 +31,7 @@ def start_new_classification():
   nested_geographylist = get_nested_children(geographylist)
   sourcelist = sourcedbo.query.order_by(asc(sourcedbo.source_name)).all()
   usagelist = usagedbo.query.order_by(asc(usagedbo.usage_name)).all()
+  sdflist = sdfdbo.query.order_by(asc(sdfdbo.sdf_name)).all()
 
 
   return render_template('classification/classification_multitab_template.html',
@@ -38,6 +39,7 @@ def start_new_classification():
                            geographylist=nested_geographylist,
                            sourcelist=sourcelist,
                            usagelist=usagelist,
+                           sdflist=sdflist,
                            title="Get Classification")
 
 
@@ -79,7 +81,7 @@ def find_ident_rules(sensitivefields):
   return foundrules
     
 
-def compare_submission(domainlist, geolist, sourcelist, usagelist, identruleslist):
+def compare_submission(domainlist, geolist, sourcelist, usagelist, sdflist):
 
   if len(domainlist) == 0:
     domainscorelist = [ 0 ]
@@ -101,22 +103,22 @@ def compare_submission(domainlist, geolist, sourcelist, usagelist, identruleslis
   else:
     usagescorelist = [ int(x.split("|")[1]) for x in usagelist ]
     usagescorelist.sort()
-  if len(identruleslist) == 0:
-    identscorelist = [ 0 ]
+  if len(sdflist) == 0:
+    sdfscorelist = [ 0 ]
   else:
-    identscorelist = [ x[1] for x in identruleslist ]
-    identscorelist.sort()
+    sdfscorelist = [ int(x.split("|")[1]) for x in sdflist ]
+    sdfscorelist.sort()
 
-  classdict = { "domain"          : domainscorelist[-1],
-                "geography"       : geoscorelist[-1],
-                "source"          : sourcescorelist[-1],
-                "usage"           : usagescorelist[-1],
-                "identifiability" : identscorelist[-1]
+  classdict = { "domain"     : domainscorelist[-1],
+                "geography"  : geoscorelist[-1],
+                "source"     : sourcescorelist[-1],
+                "usage"      : usagescorelist[-1],
+                "field"      : sdfscorelist[-1]
               }
 
   print(json.dumps(classdict, indent=4))
   # Start simple with highest score of in the list used as coordinate
-  subnpar = numpy.array([domainscorelist[-1],sourcescorelist[-1],geoscorelist[-1],usagescorelist[-1],identscorelist[-1]])
+  subnpar = numpy.array([domainscorelist[-1],sourcescorelist[-1],geoscorelist[-1],usagescorelist[-1],sdfscorelist[-1]])
 
   allclass = classificationdbo.query.all()
   froblist = []
@@ -150,7 +152,7 @@ def compare_submission(domainlist, geolist, sourcelist, usagelist, identruleslis
       kuselist.sort()
 
     # Known identifiability rules
-    kidrlist = c.identifiability_rule_list
+    kidrlist = c.field_list
     if len(kidrlist) == 0:
       kidrlist = [0]
     else:
@@ -187,30 +189,16 @@ def submit_classification():
   usagelist = submitobj["usage_list"]
   usageidlist = [ int(i.split("|")[0]) for i in usagelist ]
   usageidlist.sort()
-
-  fields = submitobj["fields_string"]
-  fieldlist = []
-  if ("," in fields):
-    fieldlist = fields.split(",")
-  elif ("|" in fields):
-    fieldlist = fields.split("|")
-  elif ("\t" in fields):
-    fieldlist = fields.split("\t")
-  else:
-    # Must be a single field
-    fieldlist = [ fields ]
-  
-  sensitivefields = apply_regexes(fieldlist)
-  identruleslist = find_ident_rules(sensitivefields)
-  identrulesidlist = [ i[0] for i in identruleslist ]
-  identrulesidlist.sort()
+  sdflist = submitobj["sdf_list"]
+  sdfidlist = [ int(i.split("|")[0]) for i in sdflist ]
+  sdfidlist.sort()
 
   submitdata = submitteddbo(
                             domain_id_list=domainidlist,
                             source_id_list=sourceidlist,
                             geography_id_list=geoidlist,
                             usage_id_list=usageidlist,
-                            identifiability_rule_id_list=identrulesidlist,
+                            field_id_list=sdfidlist,
                             rights_id_list=[],
                             contract_id_list=[]
                            )
@@ -227,23 +215,28 @@ def submit_classification():
 
 
 
-  froblist = compare_submission(domainlist, geolist, sourcelist, usagelist, identruleslist)
+  froblist = compare_submission(domainlist, geolist, sourcelist, usagelist, sdflist)
   
   print(json.dumps(froblist, indent=4))
   classdata = classificationdbo.query.get_or_404(froblist[0][0])
+  sql = "select c.control_name || ' | ' || c.control_description \
+           from mc_demo.control_recipe cr \
+           left join mc_demo.control c \
+           on cr.control_id = c.control_id \
+           where cr.recipe_id = " + str(classdata.recipe_id)
+  controlresult = db.engine.execute(sql)
+  controllist = [ row[0] for row in controlresult ]
   if froblist[0][1] == 0:
     retdict = { "found" : True,
                 "classid": classdata.classification_id,
-                "recipeid": classdata.recipe_id,
-                "label": classdata.label,
-                "identlist" : [ str(x[0]) + "|" +str(x[1]) for x in identruleslist ]
+                "control_list": controllist,
+                "label": classdata.label
               }
   else:
     retdict = { "found" : False,
                 "classid": classdata.classification_id,
-                "recipeid": classdata.recipe_id,
-                "label": classdata.label,
-                "identlist" : [ str(x[0]) + "|" +str(x[1]) for x in identruleslist ]
+                "recipeid": controllist,
+                "label": classdata.label
               }
 
     
@@ -270,9 +263,9 @@ def add_classification():
   usagelist = submitobj["usage_list"]
   usagescorelist = [ int(i.split("|")[1]) for i in usagelist ]
   usagescorelist.sort()
-  identruleslist = submitobj["ident_list"]
-  identrulesscorelist = [ int(i.split("|")[1]) for i in identruleslist ]
-  identrulesscorelist.sort()
+  sdflist = submitobj["sdf_list"]
+  sdfscorelist = [ int(i.split("|")[1]) for i in sdflist ]
+  sdfscorelist.sort()
 
   classid = submitobj["near_class_id"]
   classrow = classificationdbo.query.get_or_404(classid)
@@ -283,7 +276,7 @@ def add_classification():
                                 source_list=sourcescorelist,
                                 geography_list=geoscorelist,
                                 usage_list=usagescorelist,
-                                identifiability_rule_list=identrulesscorelist,
+                                field_list=sdfscorelist,
                                 rights_list=[],
                                 contract_list=[],
                                 recipe_id=classrow.recipe_id,

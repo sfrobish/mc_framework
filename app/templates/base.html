@@ -52,10 +52,7 @@
                         <a class="dropdown-item" href="{{ url_for('source_dim.list_source_dims') }}">Source</a>
                         <a class="dropdown-item" href="{{ url_for('geography.list_geography') }}">Geography</a>
                         <a class="dropdown-item" href="{{ url_for('usage.list_usage') }}">Usage</a>
-                        <div class="dropdown-divider"></div>
-                        <h6 class="dropdown-header">Identifiability</h6>
-                        <a class="dropdown-item" href="{{ url_for('sdf_dim.list_sensitive_fields') }}">Sensitive Data Fields</a>
-                        <a class="dropdown-item" href="{{ url_for('ident_dim.list_ident_rules') }}">Identifiability Rules</a>
+                        <a class="dropdown-item" href="{{ url_for('sdf_dim.list_sensitive_fields') }}">Identifiable Fields</a>
                     </div>
                 </li>
                 {% endif %}
