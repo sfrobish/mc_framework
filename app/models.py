@@ -188,7 +188,7 @@ class submitted_forms(basemodel):
   usage_id_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
   rights_id_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
   contract_id_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
-  identifiability_rule_id_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  field_id_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
   #submitted_timestamp = db.Column(db.TIMESTAMP, unique=False, nullable=False, primary_key=False)
 
   def __init__(self, **kwargs):
@@ -199,7 +199,7 @@ class submitted_forms(basemodel):
     self.usage_id_list = kwargs.get("usage_id_list")
     self.rights_id_list = kwargs.get("rights_id_list")
     self.contract_id_list = kwargs.get("contract_id_list")
-    self.identifiability_rule_id_list = kwargs.get("identifiability_rule_id_list")
+    self.field_id_list = kwargs.get("field_id_list")
     #self.submitted_timestamp = kwargs.get("submitted_timestamp")
 
 
@@ -212,7 +212,7 @@ class classification(basemodel):
   usage_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
   rights_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
   contract_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
-  identifiability_rule_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
+  field_list = db.Column(db.ARRAY(db.Integer), unique=False, nullable=False, primary_key=False)
   recipe_id = db.Column(db.Integer, unique=False, nullable=False, primary_key=False)
   label = db.Column(db.String(1000), unique=False, nullable=False, primary_key=False)
 
@@ -224,6 +224,6 @@ class classification(basemodel):
     self.usage_list = kwargs.get("usage_list")
     self.rights_list = kwargs.get("rights_list")
     self.contract_list = kwargs.get("contract_list")
-    self.identifiability_rule_list = kwargs.get("identifiability_rule_list")
+    self.field_list = kwargs.get("field_list")
     self.recipe_id = kwargs.get("recipe_id")
     self.label = kwargs.get("label")

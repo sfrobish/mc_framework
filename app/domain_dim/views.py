@@ -40,7 +40,7 @@ def add_domain():
 
   add_domain = True
 
-  form = GeographyForm()
+  form = DomainForm()
   """   if form.is_submitted:
     print("Submitted")
   if form.validate():
@@ -74,17 +74,16 @@ def edit_domain(id):
 
   confirm_user_is_admin()
 
-  print("made it " + str(id))
   # Edit a domain
   add_domain = False
 
   domaindata = domaindbo.query.get_or_404(id)
   
-  form = GeographyForm(obj=domaindata)
+  form = DomainForm(obj=domaindata)
   #if form.validate_on_submit():
-  domaindata.geo_name = form.name.data
-  domaindata.geo_descr = form.description.data
-  domaindata.parent_geo_id = form.parent.data
+  domaindata.domain_name = form.name.data
+  domaindata.domain_descr = form.description.data
+  domaindata.parent_domain_id = form.parent.data
   domaindata.similarity_score = form.similarity.data
   db.session.commit()
   flash('You have successfully edited the domain.')
@@ -100,7 +99,6 @@ def delete_domain(id):
   confirm_user_is_admin()
 
   # Delete a domain from the database
-  print(id)
   domaindata = domaindbo.query.get_or_404(id)
   db.session.delete(domaindata)
   db.session.commit()

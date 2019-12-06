@@ -29,7 +29,7 @@
           <div class="table-title">
             <div class="row">
               <div class="col-sm-6">
-                <h2>Get a Classification - <b>Domain</b></h2>
+                <h2><b>Domain</b></h2>
               </div>
             </div>
           </div>
@@ -66,7 +66,7 @@
           <div class="table-title">
             <div class="row">
               <div class="col-sm-6">
-                <h2>Get a Classification - <b>Geography</b></h2>
+                <h2><b>Geography</b></h2>
               </div>
             </div>
           </div>
@@ -89,7 +89,7 @@
                         <label for="checkbox1"></label>
                       </span>
                     </td>
-                    <td> {% for space in range(1, geography.depth) %}<span> &#0149; </span>{% endfor %}{{ geography.geo_name }} </td>
+                    <td>{{ geography.geo_name }}</td>
                   </tr>
                 {% endfor %}
               </tbody>
@@ -113,7 +113,7 @@
           <div class="table-title">
             <div class="row">
               <div class="col-sm-6">
-                <h2>Get a Classification - <b>Source</b></h2>
+                <h2><b>Source</b></h2>
               </div>
             </div>
           </div>
@@ -151,7 +151,7 @@
           <div class="table-title">
             <div class="row">
               <div class="col-sm-6">
-                <h2>Get a Classification - <b>Usage</b></h2>
+                <h2><b>Usage</b></h2>
               </div>
             </div>
           </div>
@@ -185,9 +185,32 @@
 
     <div class="tab-pane fade" id="tabFields">
       <div class="container">
-        <div class="form-group">
-          <label for="fieldlist">Field List</label>
-          <textarea class="form-control rounded-0" id="fieldlist" rows="3"></textarea>
+        <div class="table-wrapper">
+          <div class="table-title">
+            <div class="row">
+              <div class="col-sm-6">
+                <h2><b>Identifiable Fields</b></h2>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table id="tableUsage" class="table table-striped table-hover">
+              <tbody>
+                {% for sdf in sdflist %}
+                  <tr>
+                    <td>
+                      <span class="custom-checkbox">
+                        <input type="checkbox" id="{{ 'sdf' ~ sdf.sdf_id }}" name="sdf"
+                              value="{{ sdf.sdf_id }}|{{ sdf.risk_score }}">
+                        <label for="checkbox1"></label>
+                      </span>
+                    </td>
+                    <td> {{ sdf.sdf_name }} </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
       <div class="container">
@@ -220,15 +243,15 @@
 					<div class="form-group">
 						<label>Classification ID</label>
 						<input type="text" readonly id="classificationid" name="classificationid" class="form-control" >
-					</div>
-					<div class="form-group">
-						<label>Recipe ID</label>
-						<input type="text" readonly id="recipeid" name="recipeid" class="form-control" >
-          </div>		
+          </div>	
           <div class="form-group">
-						<label>Label</label>
-						<input type="text" readonly id="classificationlabel" name="classificationlabel" class="form-control" >
-          </div>
+              <label>Considered Policies</label>
+              <ul class="list-group" id="policies" name="policies" >
+            </div>
+          <div class="form-group">
+						<label>Controls</label>
+						<ul class="list-group" id="controls" name="controls" >
+          </div>	
 				</div>
 				<div class="modal-footer">
 					<a class="btn btn-success" href="{{ url_for('home.homepage') }}" role="button" >Accept</a> 
@@ -260,10 +283,6 @@
 						<label>Label</label>
 						<input type="text" readonly id="classificationlabel" name="classificationlabel" class="form-control" >
           </div>
-          <div class="form-group">
-						<label>Identifiability Rules List</label>
-						<input type="text" readonly id="identidlist" name="identidlist" class="form-control" >
-          </div>	
 				</div>
 				<div class="modal-footer">
 					<input type="button" class="btn btn-danger" data-dismiss="modal" value="Reject">
@@ -294,11 +313,12 @@ $(document).ready(function() {
     var geoArray = $("input:checkbox[name=geography]:checked").map(function(){return $(this).val()}).get();
     var sourceArray = $("input:checkbox[name=source]:checked").map(function(){return $(this).val()}).get();
     var usageArray = $("input:checkbox[name=usage]:checked").map(function(){return $(this).val()}).get();
+    var sdfArray = $("input:checkbox[name=sdf]:checked").map(function(){return $(this).val()}).get();
     var dataobj = { "domain_list"    : domainArray,
                     "geography_list" : geoArray,
                     "source_list"    : sourceArray,
                     "usage_list"     : usageArray,
-                    "fields_string"  : $("textarea").val()
+                    "sdf_list"       : sdfArray
                   }
 
 		$.ajax({
@@ -310,12 +330,32 @@ $(document).ready(function() {
 				if (data.found) {
           var myClassId = data.classid;
           $('.modal-body #classificationid').val(myClassId);
-          var myRecipeId = data.recipeid;
-          $('.modal-body #recipeid').val(myRecipeId);
           var myLabel = data.label;
-          $('.modal-body #classificationlabel').val(myLabel);
-          var myIdentList = data.identlist
-          $('.modal-body #identidlist').val(myIdentList);
+          var myPolicyList = myLabel.split("\n");
+          var polistlistelem = $('.modal-body #policies');
+          var polparent = polistlistelem.parent();
+
+          polistlistelem.detach().empty().each(function(i){
+            for (var x = 0; x < myPolicyList.length; x++){
+              $(this).append('<li>' + myPolicyList[x] + '</li>');
+              if (x == myPolicyList.length - 1){
+                $(this).appendTo(polparent);
+              }
+            }
+          });
+
+          var myControlArray = data.control_list;
+          var controlslistelem = $('.modal-body #controls');
+          var parent = controlslistelem.parent();
+
+          controlslistelem.detach().empty().each(function(i){
+            for (var x = 0; x < myControlArray.length; x++){
+              $(this).append('<li>' + myControlArray[x] + '</li>');
+              if (x == myControlArray.length - 1){
+                $(this).appendTo(parent);
+              }
+            }
+          });
           var myRedirect = data.redirect
           $('.modal-body #redirect').val(myRedirect);
           $('#classificationFoundModal').modal('show');
@@ -323,7 +363,6 @@ $(document).ready(function() {
           var myClassId = data.classid;
           $('.modal-body #classificationid').val(myClassId);
           var myRecipeId = data.recipeid;
-          $('.modal-body #recipeid').val(myRecipeId);
           var myLabel = data.label;
           $('.modal-body #classificationlabel').val(myLabel);
           var myIdentList = data.identlist
@@ -362,27 +401,6 @@ $(document).ready(function() {
 			}
 		});
 	});
-  var checkbox = $('table tbody input[type="checkbox"]');
-
-  checkbox.click(function () {
-    const parent_elem_tag = '#geography' + $(this).data('parent');
-    const parent = $(parent_elem_tag);
-    if (parent.length) {
-      const sibling_elem_ids = parent.data('children');
-      const sibling_elem_tags = sibling_elem_ids.map(id => `#geography${id}`);
-      const all_siblings_checked = sibling_elem_tags.reduce((sum, next) => sum && $(next).prop("checked"), true);
-      if (all_siblings_checked) {
-        parent.prop("checked", true);
-      }
-      if (!this.checked && parent.prop("checked")) {
-        parent.prop("checked", false);
-      }
-    }
-    const children_elem_ids = $(this).data('children');
-    const children_elem_tags = children_elem_ids.map(id => `#geography${id}`);
-    children_elem_tags.forEach(tag => $(tag).prop("checked", this.checked));
-
-  });
 
 });
 
